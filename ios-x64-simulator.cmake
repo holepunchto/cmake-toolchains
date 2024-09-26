@@ -1,6 +1,8 @@
 set(CMAKE_SYSTEM_NAME Darwin)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
+set(CMAKE_OSX_SYSROOT iphonesimulator)
+
 set(target x86_64-apple-ios14.0-simulator)
 
 set(CMAKE_C_COMPILER clang)
