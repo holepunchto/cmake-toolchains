@@ -2,7 +2,15 @@
   "name": "cmake-toolchains",
   "version": "1.0.0",
   "description": "Clang-based CMake toolchain definitions for easy cross compilation",
+  "exports": {
+    ".": "./index.js",
+    "./package": "./package.json"
+  },
   "files": [
+    "index.js",
+    "*.cmake"
+  ],
+  "assets": [
     "*.cmake"
   ],
   "repository": {
@@ -14,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/holepunchto/cmake-toolchains/issues"
   },
-  "homepage": "https://github.com/holepunchto/cmake-toolchains#readme"
+  "homepage": "https://github.com/holepunchto/cmake-toolchains#readme",
+  "dependencies": {
+    "require-asset": "^1.0.2"
+  }
 }
