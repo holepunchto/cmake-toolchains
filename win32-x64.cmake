@@ -3,9 +3,9 @@ set(CMAKE_SYSTEM_PROCESSOR x64)
 
 set(target x86_64-pc-win32)
 
-set(CMAKE_C_COMPILER clang.exe)
+set(CMAKE_C_COMPILER clang-cl)
 set(CMAKE_C_COMPILER_TARGET ${target})
-set(CMAKE_CXX_COMPILER clang++.exe)
+set(CMAKE_CXX_COMPILER clang-cl)
 set(CMAKE_CXX_COMPILER_TARGET ${target})
-set(CMAKE_ASM_COMPILER clang.exe)
+set(CMAKE_ASM_COMPILER clang-cl)
 set(CMAKE_ASM_COMPILER_TARGET ${target})
