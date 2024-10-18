@@ -8,10 +8,12 @@
   },
   "files": [
     "index.js",
-    "*.cmake"
+    "*.cmake",
+    "android"
   ],
   "assets": [
-    "*.cmake"
+    "*.cmake",
+    "android"
   ],
   "repository": {
     "type": "git",

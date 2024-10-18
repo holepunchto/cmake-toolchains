@@ -1,5 +1,15 @@
-set(CMAKE_SYSTEM_NAME Android)
-set(CMAKE_SYSTEM_VERSION 29)
+set(ANDROID_TOOLCHAIN clang)
+set(ANDROID_ABI x86_64)
+set(ANDROID_PLATFORM android-31)
+set(ANDROID_PIE ON)
+set(ANDROID_ALLOW_UNDEFINED_SYMBOLS ON)
 
-set(CMAKE_ANDROID_ARCH_ABI x86_64)
-set(CMAKE_ANDROID_STL_TYPE none)
+if(NOT DEFINED ANDROID_STL)
+  set(ANDROID_STL none)
+endif()
+
+if(NOT DEFINED ANDROID_NDK)
+  include("${CMAKE_CURRENT_LIST_DIR}/android/find-ndk.cmake")
+endif()
+
+include("${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
