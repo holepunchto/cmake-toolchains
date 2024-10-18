@@ -1,4 +1,4 @@
-set(CMAKE_SYSTEM_NAME Darwin)
+set(CMAKE_SYSTEM_NAME iOS)
 set(CMAKE_SYSTEM_PROCESSOR arm64)
 
 set(target arm64-apple-ios14.0)
