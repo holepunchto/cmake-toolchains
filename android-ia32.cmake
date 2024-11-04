@@ -8,7 +8,7 @@ if(NOT DEFINED ANDROID_PLATFORM)
 endif()
 
 if(NOT DEFINED ANDROID_STL)
-  set(ANDROID_STL c++_shared)
+  set(ANDROID_STL none)
 endif()
 
 if(NOT DEFINED ANDROID_NDK)
