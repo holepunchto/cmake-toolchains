@@ -1,3 +1,9 @@
 const { compile } = require('./test/helpers')
 
-compile('test/fixtures/c/executable')
+for (const fixture of [
+  'test/fixtures/c/executable',
+  'test/fixtures/c/shared-library',
+  'test/fixtures/c/static-library'
+]) {
+  compile(fixture)
+}
