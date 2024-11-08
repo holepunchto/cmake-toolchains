@@ -54,9 +54,9 @@ function skip (target) {
     case 'ios-x64-simulator':
       return platform !== 'darwin'
     case 'linux-arm64':
-      return platform !== 'linux' && arch !== 'arm64'
+      return platform !== 'linux' || arch !== 'arm64'
     case 'linux-x64':
-      return platform !== 'linux' && arch !== 'x64'
+      return platform !== 'linux' || arch !== 'x64'
     case 'win32-arm64':
     case 'win32-x64':
       return platform !== 'win32'
