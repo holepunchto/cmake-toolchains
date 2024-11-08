@@ -35,6 +35,7 @@
     "brittle": "^3.7.0",
     "cmake-runtime": "^3.30.6-4",
     "newline-decoder": "^1.0.2",
+    "ninja-runtime": "^1.12.2-0",
     "standard": "^17.1.2"
   }
 }

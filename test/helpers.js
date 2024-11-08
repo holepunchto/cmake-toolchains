@@ -1,6 +1,7 @@
 const test = require('brittle')
 const path = require('path')
-const spawn = require('cmake-runtime/spawn')
+const cmake = require('cmake-runtime/spawn')
+const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
 const toolchains = require('..')
 
@@ -21,13 +22,13 @@ function print (t, stream) {
 }
 
 async function run (t, referrer, args, opts = {}) {
-  const proc = spawn(referrer, { ...opts, args })
+  const job = cmake(referrer, { ...opts, args })
 
   await new Promise((resolve, reject) => {
-    print(t, proc.stdout)
-    print(t, proc.stderr)
+    print(t, job.stdout)
+    print(t, job.stderr)
 
-    proc.on('exit', (code) => {
+    job.on('exit', (code) => {
       if (code === null || code !== 0) {
         reject(new Error('Failed'))
       } else {
@@ -58,7 +59,8 @@ exports.compile = async function compile (fixture) {
         '-G', 'Ninja',
         '--fresh',
         '--toolchain', toolchain,
-        '-DCMAKE_MESSAGE_LOG_LEVEL=NOTICE'
+        '-DCMAKE_MESSAGE_LOG_LEVEL=NOTICE',
+        `-DCMAKE_MAKE_PROGRAM=${ninja}`
       ])
 
       await run(t, 'cmake', [
