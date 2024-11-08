@@ -1,8 +1,8 @@
 set(CMAKE_SYSTEM_NAME Darwin)
 set(CMAKE_SYSTEM_PROCESSOR arm64)
 
-find_program(clang clang)
-find_program(clang++ clang++)
+find_program(clang clang REQUIRED)
+find_program(clang++ clang++ REQUIRED)
 
 set(target arm64-apple-macosx11.0)
 
