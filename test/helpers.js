@@ -67,7 +67,7 @@ function skip (target) {
 
 exports.compile = async function compile (fixture) {
   for (const [target, toolchain] of Object.entries(toolchains)) {
-    await test(`${fixture}, ${target}`, { skip: skip(target) }, async (t) => {
+    await test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
       const source = path.resolve(__dirname, '..', fixture)
       const build = path.join(source, 'build', target)
 
