@@ -39,14 +39,14 @@ async function run (t, referrer, args, opts = {}) {
 }
 
 function skip (target) {
-  const { platform, arch } = process
+  const { platform, arch, env } = process
 
   switch (target) {
     case 'android-arm':
     case 'android-arm64':
     case 'android-ia32':
     case 'android-x64':
-      return platform !== 'darwin' && platform !== 'linux'
+      return (platform !== 'darwin' && platform !== 'linux') || !!env.ANDROID_HOME
     case 'darwin-arm64':
     case 'darwin-x64':
     case 'ios-arm64':
