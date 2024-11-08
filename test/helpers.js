@@ -39,11 +39,29 @@ async function run (t, referrer, args, opts = {}) {
 }
 
 function skip (target) {
-  const platform = process.platform
-  if (target.startsWith('darwin') || target.startsWith('ios')) return platform !== 'darwin'
-  if (target.startsWith('linux')) return platform !== 'linux'
-  if (target.startsWith('android')) return platform !== 'darwin' && platform !== 'linux'
-  if (target.startsWith('win32')) return platform !== 'win32'
+  const { platform, arch } = process
+
+  switch (target) {
+    case 'android-arm':
+    case 'android-arm64':
+    case 'android-ia32':
+    case 'android-x64':
+      return platform !== 'darwin' && platform !== 'linux'
+    case 'darwin-arm64':
+    case 'darwin-x64':
+    case 'ios-arm64':
+    case 'ios-arm64-simulator':
+    case 'ios-x64-simulator':
+      return platform !== 'darwin'
+    case 'linux-arm64':
+      return platform !== 'linux' && arch !== 'arm64'
+    case 'linux-x64':
+      return platform !== 'linux' && arch !== 'x64'
+    case 'win32-arm64':
+    case 'win32-x64':
+      return platform !== 'win32'
+  }
+
   return true
 }
 
