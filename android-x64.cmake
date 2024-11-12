@@ -16,3 +16,7 @@ if(NOT DEFINED ANDROID_NDK)
 endif()
 
 include("${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
+
+# TODO: Remove when upstream bug is fixed
+set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE "LINKER:--whole-archive" "<LINK_ITEM>" "LINKER:--no-whole-archive")
+set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED TRUE)
