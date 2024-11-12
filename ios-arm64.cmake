@@ -21,6 +21,6 @@ set(CMAKE_OBJC_COMPILER_TARGET ${target})
 set(CMAKE_OSX_SYSROOT iphoneos)
 set(CMAKE_OSX_DEPLOYMENT_TARGET 14.0)
 
-# TODO: Remove when upstream bug is fixed
+# TODO: https://gitlab.kitware.com/cmake/cmake/-/issues/26440
 set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE "LINKER:-force_load,<LIB_ITEM>")
 set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED TRUE)
