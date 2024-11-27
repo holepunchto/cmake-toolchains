@@ -15,6 +15,11 @@ if(NOT DEFINED ANDROID_NDK)
   include("${CMAKE_CURRENT_LIST_DIR}/android/find-ndk.cmake")
 endif()
 
+# https://github.com/android/ndk/issues/243
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -g0")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g0")
+set(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} -g0")
+
 include("${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
 
 # TODO: https://gitlab.kitware.com/cmake/cmake/-/issues/26440
