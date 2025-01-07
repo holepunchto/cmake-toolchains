@@ -6,8 +6,6 @@ find_program(clang++ clang++ REQUIRED)
 
 set(target arm64-apple-ios14.0-simulator)
 
-set(CMAKE_LINKER_TYPE LLD)
-
 set(CMAKE_C_COMPILER ${clang})
 set(CMAKE_C_COMPILER_TARGET ${target})
 
