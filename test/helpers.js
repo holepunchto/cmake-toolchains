@@ -5,7 +5,7 @@ const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
 const toolchains = require('..')
 
-function print (t, stream) {
+function print(t, stream) {
   const decoder = new NewlineDecoder()
 
   stream
@@ -21,7 +21,7 @@ function print (t, stream) {
     })
 }
 
-async function run (t, referrer, args, opts = {}) {
+async function run(t, referrer, args, opts = {}) {
   const job = cmake(referrer, { ...opts, args })
 
   await new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ async function run (t, referrer, args, opts = {}) {
   })
 }
 
-function skip (target) {
+function skip(target) {
   const { platform, arch, env } = process
 
   switch (target) {
@@ -46,7 +46,9 @@ function skip (target) {
     case 'android-arm64':
     case 'android-ia32':
     case 'android-x64':
-      return (platform !== 'darwin' && platform !== 'linux') || !env.ANDROID_HOME
+      return (
+        (platform !== 'darwin' && platform !== 'linux') || !env.ANDROID_HOME
+      )
     case 'darwin-arm64':
     case 'darwin-x64':
     case 'ios-arm64':
@@ -65,26 +67,31 @@ function skip (target) {
   return true
 }
 
-exports.compile = function compile (fixture) {
+exports.compile = function compile(fixture) {
   for (const [target, toolchain] of Object.entries(toolchains)) {
-    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
-      const source = path.resolve(__dirname, '..', fixture)
-      const build = path.join(source, 'build', target)
+    test(
+      `${fixture}, ${target}`,
+      { skip: skip(target), timeout: 120000 },
+      async (t) => {
+        const source = path.resolve(__dirname, '..', fixture)
+        const build = path.join(source, 'build', target)
 
-      await run(t, 'cmake', [
-        '-S', source,
-        '-B', build,
-        '-G', 'Ninja',
-        '--fresh',
-        '--toolchain', toolchain,
-        '-DCMAKE_MESSAGE_LOG_LEVEL=NOTICE',
-        `-DCMAKE_MAKE_PROGRAM=${ninja}`
-      ])
+        await run(t, 'cmake', [
+          '-S',
+          source,
+          '-B',
+          build,
+          '-G',
+          'Ninja',
+          '--fresh',
+          '--toolchain',
+          toolchain,
+          '-DCMAKE_MESSAGE_LOG_LEVEL=NOTICE',
+          `-DCMAKE_MAKE_PROGRAM=${ninja}`
+        ])
 
-      await run(t, 'cmake', [
-        '--build', build,
-        '--clean-first'
-      ])
-    })
+        await run(t, 'cmake', ['--build', build, '--clean-first'])
+      }
+    )
   }
 }

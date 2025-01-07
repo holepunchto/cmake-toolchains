@@ -7,7 +7,10 @@ exports['android-x64'] = asset('./android-x64.cmake', __filename)
 exports['darwin-arm64'] = asset('./darwin-arm64.cmake', __filename)
 exports['darwin-x64'] = asset('./darwin-x64.cmake', __filename)
 exports['ios-arm64'] = asset('./ios-arm64.cmake', __filename)
-exports['ios-arm64-simulator'] = asset('./ios-arm64-simulator.cmake', __filename)
+exports['ios-arm64-simulator'] = asset(
+  './ios-arm64-simulator.cmake',
+  __filename
+)
 exports['ios-x64-simulator'] = asset('./ios-x64-simulator.cmake', __filename)
 exports['linux-arm64'] = asset('./linux-arm64.cmake', __filename)
 exports['linux-x64'] = asset('./linux-x64.cmake', __filename)
