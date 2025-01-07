@@ -30,5 +30,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+      - run: apt upgrade llvm
+        if: ${{ matrix.platform == 'linux' }}
+      - run: brew install llvm
+        if: ${{ matrix.platform == 'darwin' }}
+      - run: choco upgrade llvm
+        if: ${{ matrix.platform == 'win32' }}
       - run: npm install
       - run: npm test
