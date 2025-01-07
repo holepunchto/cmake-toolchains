@@ -3,6 +3,8 @@ set(CMAKE_SYSTEM_PROCESSOR ARM64)
 
 set(target arm64-pc-win32)
 
+set(CMAKE_LINKER_TYPE LLD)
+
 set(CMAKE_AR llvm-lib)
 set(CMAKE_LINKER lld-link)
 set(CMAKE_NM llvm-nm)

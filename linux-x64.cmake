@@ -6,6 +6,8 @@ find_program(clang++ clang++ REQUIRED)
 
 set(target x86_64-linux-gnu)
 
+set(CMAKE_LINKER_TYPE LLD)
+
 set(CMAKE_C_COMPILER ${clang})
 set(CMAKE_C_COMPILER_TARGET ${target})
 
