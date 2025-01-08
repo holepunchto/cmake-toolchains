@@ -9,7 +9,7 @@ find_program(
 
 find_program(
   clang++
-  NAMES clang++20 clang++19 clang++18 clang++
+  NAMES clang++-20 clang++-19 clang++-18 clang++
   REQUIRED
 )
 
