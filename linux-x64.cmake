@@ -1,8 +1,17 @@
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
-find_program(clang clang REQUIRED)
-find_program(clang++ clang++ REQUIRED)
+find_program(
+  clang
+  NAMES clang-20 clang-19 clang-18 clang
+  REQUIRED
+)
+
+find_program(
+  clang++
+  NAMES clang++20 clang++19 clang++18 clang++
+  REQUIRED
+)
 
 set(target x86_64-linux-gnu)
 
