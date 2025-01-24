@@ -22,4 +22,6 @@ if(CMAKE_BUILD_TYPE MATCHES "Release")
   set(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} -g0")
 endif()
 
+set(VCPKG_TARGET_TRIPLET arm-android)
+
 include("${ANDROID_NDK}/build/cmake/android.toolchain.cmake")

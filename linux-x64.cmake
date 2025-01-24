@@ -25,3 +25,5 @@ set(CMAKE_CXX_COMPILER_TARGET ${target})
 
 set(CMAKE_ASM_COMPILER ${clang})
 set(CMAKE_ASM_COMPILER_TARGET ${target})
+
+set(VCPKG_TARGET_TRIPLET x64-linux)

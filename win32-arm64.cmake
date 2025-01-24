@@ -24,3 +24,5 @@ set(CMAKE_ASM_COMPILER clang-cl)
 set(CMAKE_ASM_COMPILER_TARGET ${target})
 
 set(CMAKE_RC_COMPILER llvm-rc)
+
+set(VCPKG_TARGET_TRIPLET arm64-windows)

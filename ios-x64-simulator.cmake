@@ -20,3 +20,5 @@ set(CMAKE_OBJC_COMPILER_TARGET ${target})
 
 set(CMAKE_OSX_SYSROOT iphonesimulator)
 set(CMAKE_OSX_DEPLOYMENT_TARGET 14.0)
+
+set(VCPKG_TARGET_TRIPLET x64-ios-simulator)
