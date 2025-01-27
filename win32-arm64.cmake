@@ -9,6 +9,7 @@ set(CMAKE_NM llvm-nm)
 set(CMAKE_OBJDUMP llvm-objdump)
 set(CMAKE_RANLIB llvm-ranlib)
 set(CMAKE_MT llvm-mt)
+set(CMAKE_STRIP llvm-strip)
 
 set(CMAKE_C_COMPILER clang-cl)
 set(CMAKE_C_COMPILER_TARGET ${target})
