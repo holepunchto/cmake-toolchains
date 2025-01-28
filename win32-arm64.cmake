@@ -1,7 +1,7 @@
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR ARM64)
 
-set(target arm64-pc-win32)
+set(target aarch64-windows-msvc)
 
 set(CMAKE_AR llvm-lib)
 set(CMAKE_LINKER lld-link)
