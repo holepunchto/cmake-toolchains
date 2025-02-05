@@ -2,7 +2,6 @@ set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR ARM64)
 
 find_program(clang-cl clang-cl REQUIRED)
-find_program(lld-link lld-link REQUIRED)
 find_program(llvm-lib llvm-lib REQUIRED)
 find_program(llvm-nm llvm-nm REQUIRED)
 find_program(llvm-objdump llvm-objdump REQUIRED)
@@ -13,7 +12,8 @@ find_program(llvm-rc llvm-rc REQUIRED)
 
 set(target aarch64-windows-msvc)
 
-set(CMAKE_LINKER ${lld-link})
+set(CMAKE_LINKER_TYPE LLD)
+
 set(CMAKE_AR ${llvm-lib})
 set(CMAKE_NM ${llvm-nm})
 set(CMAKE_OBJDUMP ${llvm-objdump})
