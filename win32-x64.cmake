@@ -9,6 +9,7 @@ find_program(llvm-ranlib llvm-ranlib REQUIRED)
 find_program(llvm-mt llvm-mt REQUIRED)
 find_program(llvm-strip llvm-strip REQUIRED)
 find_program(llvm-rc llvm-rc REQUIRED)
+find_program(nasm nasm)
 
 set(target x86_64-windows-msvc)
 
@@ -29,6 +30,10 @@ set(CMAKE_CXX_COMPILER_TARGET ${target})
 
 set(CMAKE_ASM_COMPILER ${clang-cl})
 set(CMAKE_ASM_COMPILER_TARGET ${target})
+
+if(nasm)
+  set(CMAKE_ASM_NASM_COMPILER ${nasm})
+endif()
 
 set(CMAKE_RC_COMPILER ${llvm-rc})
 

@@ -3,6 +3,7 @@ set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
 find_program(clang clang REQUIRED)
 find_program(clang++ clang++ REQUIRED)
+find_program(nasm nasm)
 
 set(target x86_64-apple-ios14.0-simulator)
 
@@ -14,6 +15,10 @@ set(CMAKE_CXX_COMPILER_TARGET ${target})
 
 set(CMAKE_ASM_COMPILER ${clang})
 set(CMAKE_ASM_COMPILER_TARGET ${target})
+
+if(nasm)
+  set(CMAKE_ASM_NASM_COMPILER ${nasm})
+endif()
 
 set(CMAKE_OBJC_COMPILER ${clang})
 set(CMAKE_OBJC_COMPILER_TARGET ${target})
