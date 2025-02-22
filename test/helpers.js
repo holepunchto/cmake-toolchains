@@ -57,6 +57,10 @@ function skip(target) {
       return platform !== 'darwin'
     case 'linux-arm64':
       return platform !== 'linux' || arch !== 'arm64'
+    case 'linux-mips':
+      return platform !== 'linux'
+    case 'linux-mipsel':
+      return platform !== 'linux'
     case 'linux-x64':
       return platform !== 'linux' || arch !== 'x64'
     case 'win32-arm64':
