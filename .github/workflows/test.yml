@@ -32,7 +32,7 @@ jobs:
           node-version: lts/*
       - run: |
           sudo apt update
-          sudo apt install -y gcc-mips-linux-gnu
+          sudo apt install -y gcc-mips-linux-gnu g++-mips-linux-gnu gcc-mipsel-linux-gnu g++-mipsel-linux-gnu
         if: ${{ matrix.platform == 'linux' }}
       - run: npm install
       - run: npm test
