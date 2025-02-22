@@ -26,4 +26,6 @@ set(CMAKE_CXX_COMPILER_TARGET ${target})
 set(CMAKE_ASM_COMPILER ${clang})
 set(CMAKE_ASM_COMPILER_TARGET ${target})
 
+set(CMAKE_EXE_LINKER_FLAGS_INIT "-static")
+
 set(VCPKG_TARGET_TRIPLET mips-linux)
