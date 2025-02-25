@@ -16,6 +16,10 @@ exports['ios-x64-simulator'] = require.asset(
   __filename
 )
 exports['linux-arm64'] = require.asset('./linux-arm64.cmake', __filename)
+exports['linux-arm64-musl'] = require.asset(
+  './linux-arm64-musl.cmake',
+  __filename
+)
 exports['linux-mips'] = require.asset('./linux-mips.cmake', __filename)
 exports['linux-mips-musl'] = require.asset(
   './linux-mips-musl.cmake',
@@ -35,5 +39,6 @@ exports['linux-mipsel-muslsf'] = require.asset(
   __filename
 )
 exports['linux-x64'] = require.asset('./linux-x64.cmake', __filename)
+exports['linux-x64-musl'] = require.asset('./linux-x64-musl.cmake', __filename)
 exports['win32-arm64'] = require.asset('./win32-arm64.cmake', __filename)
 exports['win32-x64'] = require.asset('./win32-x64.cmake', __filename)
