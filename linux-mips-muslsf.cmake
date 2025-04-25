@@ -27,3 +27,5 @@ set(CMAKE_ASM_COMPILER_TARGET ${target})
 set(CMAKE_EXE_LINKER_FLAGS_INIT "-static")
 
 set(VCPKG_TARGET_TRIPLET mips-linux-muslsf)
+
+add_compile_definitions(__MUSL__)
