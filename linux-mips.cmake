@@ -12,6 +12,7 @@ set(CMAKE_C_COMPILER_TARGET ${target})
 
 set(CMAKE_CXX_COMPILER ${clang++})
 set(CMAKE_CXX_COMPILER_TARGET ${target})
+set(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS ${clang-scan-deps})
 
 set(CMAKE_ASM_COMPILER ${clang})
 set(CMAKE_ASM_COMPILER_TARGET ${target})
