@@ -28,5 +28,4 @@ find_program(
     clang-scan-deps-19
     clang-scan-deps-18
     clang-scan-deps
-  REQUIRED
 )
