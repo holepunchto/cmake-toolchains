@@ -9,7 +9,8 @@
   "files": [
     "index.js",
     "*.cmake",
-    "android"
+    "android",
+    "linux"
   ],
   "assets": [
     "*.cmake",
