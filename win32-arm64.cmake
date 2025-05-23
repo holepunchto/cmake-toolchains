@@ -33,5 +33,6 @@ set(CMAKE_ASM_COMPILER_TARGET ${target})
 set(CMAKE_RC_COMPILER ${llvm-rc})
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
 
 set(VCPKG_TARGET_TRIPLET arm64-windows)
