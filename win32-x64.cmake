@@ -1,5 +1,5 @@
 set(CMAKE_SYSTEM_NAME Windows)
-set(CMAKE_SYSTEM_PROCESSOR x64)
+set(CMAKE_SYSTEM_PROCESSOR AMD64)
 
 find_program(clang-cl clang-cl REQUIRED)
 find_program(llvm-lib llvm-lib REQUIRED)
