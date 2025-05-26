@@ -23,4 +23,6 @@ if(nasm)
   set(CMAKE_ASM_NASM_COMPILER ${nasm})
 endif()
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 set(VCPKG_TARGET_TRIPLET x64-linux)
