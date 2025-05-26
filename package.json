@@ -14,7 +14,8 @@
   ],
   "assets": [
     "*.cmake",
-    "android"
+    "android",
+    "linux"
   ],
   "scripts": {
     "test": "prettier . --check && node test.js"
