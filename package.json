@@ -10,11 +10,13 @@
     "index.js",
     "*.cmake",
     "android",
+    "apple",
     "linux"
   ],
   "assets": [
     "*.cmake",
     "android",
+    "apple",
     "linux"
   ],
   "scripts": {
