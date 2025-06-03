@@ -1,8 +1,7 @@
 set(CMAKE_SYSTEM_NAME iOS)
 set(CMAKE_SYSTEM_PROCESSOR arm64)
 
-find_program(clang clang REQUIRED)
-find_program(clang++ clang++ REQUIRED)
+include("${CMAKE_CURRENT_LIST_DIR}/apple/find-clang.cmake")
 
 set(target arm64-apple-ios14.0)
 

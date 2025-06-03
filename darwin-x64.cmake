@@ -1,9 +1,8 @@
 set(CMAKE_SYSTEM_NAME Darwin)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 
-find_program(clang clang REQUIRED)
-find_program(clang++ clang++ REQUIRED)
-find_program(nasm nasm)
+include("${CMAKE_CURRENT_LIST_DIR}/apple/find-clang.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/apple/find-nasm.cmake")
 
 set(target x86_64-apple-macosx11.0)
 
