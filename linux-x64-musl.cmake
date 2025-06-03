@@ -28,6 +28,6 @@ set(CMAKE_EXE_LINKER_FLAGS_INIT "-static")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set(VCPKG_TARGET_TRIPLET x86_64-linux-musl)
+set(VCPKG_TARGET_TRIPLET x64-linux-musl)
 
 add_compile_definitions(__MUSL__)
