@@ -40,5 +40,6 @@ exports['linux-mipsel-muslsf'] = require.asset(
 )
 exports['linux-x64'] = require.asset('./linux-x64.cmake', __filename)
 exports['linux-x64-musl'] = require.asset('./linux-x64-musl.cmake', __filename)
+exports['mingw-x64'] = require.asset('./mingw-x64.cmake', __filename)
 exports['win32-arm64'] = require.asset('./win32-arm64.cmake', __filename)
 exports['win32-x64'] = require.asset('./win32-x64.cmake', __filename)
