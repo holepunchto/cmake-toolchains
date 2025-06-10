@@ -3,13 +3,17 @@ set(CMAKE_SYSTEM_PROCESSOR AMD64)
 
 find_program(
   cc
-  NAMES x86_64-w64-mingw32-clang
+  NAMES
+    x86_64-w64-mingw32-clang
+    x86_64-w64-mingw32-clang.exe
   REQUIRED
 )
 
 find_program(
   c++
-  NAMES x86_64-w64-mingw32-clang++
+  NAMES
+    x86_64-w64-mingw32-clang++
+    x86_64-w64-mingw32-clang++.exe
   REQUIRED
 )
 

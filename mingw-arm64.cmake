@@ -3,13 +3,17 @@ set(CMAKE_SYSTEM_PROCESSOR ARM64)
 
 find_program(
   cc
-  NAMES aarch64-w64-mingw32-clang
+  NAMES
+    aarch64-w64-mingw32-clang
+    aarch64-w64-mingw32-clang.exe
   REQUIRED
 )
 
 find_program(
   c++
-  NAMES aarch64-w64-mingw32-clang++
+  NAMES
+    aarch64-w64-mingw32-clang++
+    aarch64-w64-mingw32-clang++.exe
   REQUIRED
 )
 
