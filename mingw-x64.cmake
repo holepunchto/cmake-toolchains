@@ -19,8 +19,6 @@ find_program(
 
 set(target x86_64-w64-mingw32)
 
-set(CMAKE_LINKER_TYPE LLD)
-
 set(CMAKE_C_COMPILER ${cc})
 set(CMAKE_C_COMPILER_TARGET ${target})
 
