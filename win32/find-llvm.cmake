@@ -26,59 +26,59 @@ find_program(
 
 find_program(
   llvm-nm
-  NAMESllvm-nm
+  NAMES llvm-nm
   PATHS "C:/Program Files/LLVM/bin"
   NO_DEFAULT_PATH
 )
 
 find_program(
   llvm-nm
-  NAMESllvm-nm
+  NAMES llvm-nm
   REQUIRED
 )
 
 find_program(
   llvm-objdump
-  NAMES clanllvm-objdump
+  NAMES llvm-objdump
   PATHS "C:/Program Files/LLVM/bin"
   NO_DEFAULT_PATH
 )
 
 find_program(
   llvm-objdump
-  NAMES clanllvm-objdump
+  NAMES llvm-objdump
   REQUIRED
 )
 
 find_program(
   llvm-ranlib
-  NAMES clallvm-ranlib
+  NAMES llvm-ranlib
   PATHS "C:/Program Files/LLVM/bin"
   NO_DEFAULT_PATH
 )
 
 find_program(
   llvm-ranlib
-  NAMES clallvm-ranlib
+  NAMES llvm-ranlib
   REQUIRED
 )
 
 find_program(
   llvm-mt
-  NAMESllvm-mt
+  NAMES llvm-mt
   PATHS "C:/Program Files/LLVM/bin"
   NO_DEFAULT_PATH
 )
 
 find_program(
   llvm-mt
-  NAMESllvm-mt
+  NAMES llvm-mt
   REQUIRED
 )
 
 find_program(
   llvm-strip
-  NAMES clllvm-strip
+  NAMES llvm-strip
   PATHS "C:/Program Files/LLVM/bin"
   NO_DEFAULT_PATH
 )
@@ -91,13 +91,13 @@ find_program(
 
 find_program(
   llvm-rc
-  NAMESllvm-rc
+  NAMES llvm-rc
   PATHS "C:/Program Files/LLVM/bin"
   NO_DEFAULT_PATH
 )
 
 find_program(
   llvm-rc
-  NAMESllvm-rc
+  NAMES llvm-rc
   REQUIRED
 )
