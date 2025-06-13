@@ -1,15 +1,8 @@
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR AMD64)
 
-find_program(clang-cl clang-cl REQUIRED)
-find_program(llvm-lib llvm-lib REQUIRED)
-find_program(llvm-nm llvm-nm REQUIRED)
-find_program(llvm-objdump llvm-objdump REQUIRED)
-find_program(llvm-ranlib llvm-ranlib REQUIRED)
-find_program(llvm-mt llvm-mt REQUIRED)
-find_program(llvm-strip llvm-strip REQUIRED)
-find_program(llvm-rc llvm-rc REQUIRED)
-find_program(nasm nasm)
+include("${CMAKE_CURRENT_LIST_DIR}/win32/find-llvm.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/win32/find-nasm.cmake")
 
 set(target x86_64-windows-msvc)
 

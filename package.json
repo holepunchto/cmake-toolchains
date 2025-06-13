@@ -11,13 +11,15 @@
     "*.cmake",
     "android",
     "apple",
-    "linux"
+    "linux",
+    "win32"
   ],
   "assets": [
     "*.cmake",
     "android",
     "apple",
-    "linux"
+    "linux",
+    "win32"
   ],
   "scripts": {
     "test": "prettier . --check && node test.js"
