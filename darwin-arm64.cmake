@@ -3,7 +3,7 @@ set(CMAKE_SYSTEM_PROCESSOR arm64)
 
 include("${CMAKE_CURRENT_LIST_DIR}/apple/find-clang.cmake")
 
-set(target arm64-apple-macosx11.0)
+set(target arm64-apple-macosx12.0)
 
 set(CMAKE_C_COMPILER ${clang})
 set(CMAKE_C_COMPILER_TARGET ${target})
@@ -22,7 +22,7 @@ set(CMAKE_OBJCXX_COMPILER ${clang++})
 set(CMAKE_OBJCXX_COMPILER_TARGET ${target})
 
 set(CMAKE_OSX_SYSROOT macosx)
-set(CMAKE_OSX_DEPLOYMENT_TARGET 11.0)
+set(CMAKE_OSX_DEPLOYMENT_TARGET 12.0)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
