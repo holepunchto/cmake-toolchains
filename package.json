@@ -1,6 +1,6 @@
 {
   "name": "cmake-toolchains",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "Clang-based CMake toolchain definitions for easy cross compilation",
   "exports": {
     ".": "./index.js",
