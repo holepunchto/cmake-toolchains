@@ -1,9 +1,16 @@
 const test = require('brittle')
+const fs = require('fs')
 const path = require('path')
 const cmake = require('cmake-runtime/spawn')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
 const toolchains = require('..')
+
+try {
+  fs.accessSync(ninja, fs.constants.X_OK)
+} catch {
+  fs.chmodSync(ninja, 0o755)
+}
 
 function print(t, stream) {
   const decoder = new NewlineDecoder()

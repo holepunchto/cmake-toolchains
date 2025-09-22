@@ -41,7 +41,7 @@
     "brittle": "^3.7.0",
     "cmake-runtime": "^4.1.1",
     "newline-decoder": "^1.0.2",
-    "ninja-runtime": "^1.12.2-0",
+    "ninja-runtime": "^1.13.1",
     "prettier": "^3.4.2",
     "prettier-config-standard": "^7.0.0"
   }
