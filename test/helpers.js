@@ -4,7 +4,7 @@ const path = require('path')
 const cmake = require('cmake-runtime/spawn')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
-const { platform, arch } = require('which-runtime')
+const { isWindows, platform, arch } = require('which-runtime')
 const toolchains = require('..')
 
 try {
@@ -30,7 +30,7 @@ function print(t, stream) {
 }
 
 async function run(t, referrer, args, opts = {}) {
-  const job = cmake(referrer, { ...opts, args })
+  const job = cmake(referrer, { ...opts, args, shell: isWindows })
 
   await new Promise((resolve, reject) => {
     print(t, job.stdout)
