@@ -52,7 +52,7 @@ function skip(target) {
     case 'android-arm64':
     case 'android-ia32':
     case 'android-x64':
-      return platform !== 'darwin' && platform !== 'linux'
+      return platform !== 'darwin'
     case 'darwin-arm64':
     case 'darwin-x64':
     case 'ios-arm64':
