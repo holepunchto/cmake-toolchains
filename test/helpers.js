@@ -4,6 +4,7 @@ const path = require('path')
 const cmake = require('cmake-runtime/spawn')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
+const { platform, arch } = require('which-runtime')
 const toolchains = require('..')
 
 try {
@@ -46,16 +47,12 @@ async function run(t, referrer, args, opts = {}) {
 }
 
 function skip(target) {
-  const { platform, arch, env } = process
-
   switch (target) {
     case 'android-arm':
     case 'android-arm64':
     case 'android-ia32':
     case 'android-x64':
-      return (
-        (platform !== 'darwin' && platform !== 'linux') || !env.ANDROID_HOME
-      )
+      return platform !== 'darwin' && platform !== 'linux'
     case 'darwin-arm64':
     case 'darwin-x64':
     case 'ios-arm64':
