@@ -85,7 +85,7 @@ find_program(
 
 find_program(
   llvm-strip
-  NAMES clllvm-strip
+  NAMES llvm-strip
   REQUIRED
 )
 
