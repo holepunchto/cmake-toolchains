@@ -32,7 +32,19 @@ jobs:
           node-version: lts/*
       - run: |
           sudo apt update
-          sudo apt install -y gcc-mips-linux-gnu g++-mips-linux-gnu gcc-mipsel-linux-gnu g++-mipsel-linux-gnu
+          sudo apt install -y \
+            gcc-aarch64-linux-gnu \
+            g++-aarch64-linux-gnu \
+            gcc-arm-linux-gnu \
+            g++-arm-linux-gnu \
+            gcc-ia32-linux-gnu \
+            g++-ia32-linux-gnu \
+            gcc-mips-linux-gnu \
+            g++-mips-linux-gnu \
+            gcc-mipsel-linux-gnu \
+            g++-mipsel-linux-gnu \
+            gcc-x86-64-linux-gnu \
+            g++-x86-64-linux-gnu
         if: ${{ matrix.platform == 'linux' }}
       - run: npm install -g bare-runtime
       - run: npm install
