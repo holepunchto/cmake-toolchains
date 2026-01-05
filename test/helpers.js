@@ -77,29 +77,25 @@ function skip(target) {
 
 exports.compile = function compile(fixture) {
   for (const [target, toolchain] of Object.entries(toolchains)) {
-    test(
-      `${fixture}, ${target}`,
-      { skip: skip(target), timeout: 120000 },
-      async (t) => {
-        const source = path.resolve(__dirname, '..', fixture)
-        const build = path.join(source, 'build', target)
+    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
+      const source = path.resolve(__dirname, '..', fixture)
+      const build = path.join(source, 'build', target)
 
-        await run(t, 'cmake', [
-          '-S',
-          source,
-          '-B',
-          build,
-          '-G',
-          'Ninja',
-          '--fresh',
-          '--toolchain',
-          toolchain,
-          '-DCMAKE_MESSAGE_LOG_LEVEL=NOTICE',
-          `-DCMAKE_MAKE_PROGRAM=${ninja}`
-        ])
+      await run(t, 'cmake', [
+        '-S',
+        source,
+        '-B',
+        build,
+        '-G',
+        'Ninja',
+        '--fresh',
+        '--toolchain',
+        toolchain,
+        '-DCMAKE_MESSAGE_LOG_LEVEL=NOTICE',
+        `-DCMAKE_MAKE_PROGRAM=${ninja}`
+      ])
 
-        await run(t, 'cmake', ['--build', build, '--clean-first'])
-      }
-    )
+      await run(t, 'cmake', ['--build', build, '--clean-first'])
+    })
   }
 }
