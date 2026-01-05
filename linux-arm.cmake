@@ -3,7 +3,7 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 
 include("${CMAKE_CURRENT_LIST_DIR}/linux/find-clang.cmake")
 
-set(target arm-linux-gnu)
+set(target arm-linux-gnueabi)
 
 set(CMAKE_LINKER_TYPE LLD)
 
