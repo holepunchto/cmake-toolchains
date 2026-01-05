@@ -37,8 +37,8 @@ jobs:
             g++-aarch64-linux-gnu \
             gcc-arm-linux-gnueabi \
             g++-arm-linux-gnueabi \
-            gcc-i386-linux-gnu \
-            g++-i386-linux-gnu \
+            gcc-i686-linux-gnu \
+            g++-i686-linux-gnu \
             gcc-mips-linux-gnu \
             g++-mips-linux-gnu \
             gcc-mipsel-linux-gnu \
