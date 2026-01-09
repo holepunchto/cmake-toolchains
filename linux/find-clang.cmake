@@ -1,6 +1,7 @@
 find_program(
   clang
   NAMES
+    clang-22
     clang-21
     clang-20
     clang-19
@@ -12,6 +13,7 @@ find_program(
 find_program(
   clang++
   NAMES
+    clang++-22
     clang++-21
     clang++-20
     clang++-19
@@ -23,6 +25,7 @@ find_program(
 find_program(
   clang-scan-deps
   NAMES
+    clang-scan-deps-22
     clang-scan-deps-21
     clang-scan-deps-20
     clang-scan-deps-19
