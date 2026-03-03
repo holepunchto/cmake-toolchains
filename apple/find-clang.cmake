@@ -3,6 +3,7 @@ if(NOT APPLE_CLANG)
     clang
     NAMES clang
     PATHS
+      /opt/homebrew/opt/llvm@22/bin
       /opt/homebrew/opt/llvm@21/bin
       /opt/homebrew/opt/llvm@20/bin
       /opt/homebrew/opt/llvm@19/bin
@@ -23,6 +24,7 @@ if(NOT APPLE_CLANG)
     clang++
     NAMES clang++
     PATHS
+      /opt/homebrew/opt/llvm@22/bin
       /opt/homebrew/opt/llvm@21/bin
       /opt/homebrew/opt/llvm@20/bin
       /opt/homebrew/opt/llvm@19/bin
@@ -43,6 +45,7 @@ if(NOT APPLE_CLANG)
     clang-scan-deps
     NAMES clang-scan-deps
     PATHS
+      /opt/homebrew/opt/llvm@22/bin
       /opt/homebrew/opt/llvm@21/bin
       /opt/homebrew/opt/llvm@20/bin
       /opt/homebrew/opt/llvm@19/bin
