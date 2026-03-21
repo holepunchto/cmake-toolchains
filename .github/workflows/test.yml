@@ -43,6 +43,8 @@ jobs:
             g++-mips-linux-gnu \
             gcc-mipsel-linux-gnu \
             g++-mipsel-linux-gnu \
+            gcc-riscv64-linux-gnu \
+            g++-riscv64-linux-gnu \
             gcc-x86-64-linux-gnu \
             g++-x86-64-linux-gnu
         if: ${{ matrix.platform == 'linux' }}
