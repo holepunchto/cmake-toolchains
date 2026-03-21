@@ -64,6 +64,7 @@ function skip(target) {
     case 'linux-mips':
     case 'linux-mipsel':
     case 'linux-ia32':
+    case 'linux-riscv64':
     case 'linux-x64':
       return platform !== 'linux'
     case 'win32-arm64':

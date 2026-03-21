@@ -21,6 +21,7 @@ exports['linux-mips-muslsf'] = require.asset('./linux-mips-muslsf.cmake', __file
 exports['linux-mipsel'] = require.asset('./linux-mipsel.cmake', __filename)
 exports['linux-mipsel-musl'] = require.asset('./linux-mipsel-musl.cmake', __filename)
 exports['linux-mipsel-muslsf'] = require.asset('./linux-mipsel-muslsf.cmake', __filename)
+exports['linux-riscv64'] = require.asset('./linux-riscv64.cmake', __filename)
 exports['linux-x64'] = require.asset('./linux-x64.cmake', __filename)
 exports['linux-x64-musl'] = require.asset('./linux-x64-musl.cmake', __filename)
 exports['mingw-arm64'] = require.asset('./mingw-arm64.cmake', __filename)
