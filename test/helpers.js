@@ -4,7 +4,7 @@ const path = require('path')
 const cmake = require('cmake-runtime/spawn')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
-const { platform, arch } = require('which-runtime')
+const { platform } = require('which-runtime')
 const toolchains = require('..')
 
 try {
