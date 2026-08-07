@@ -33,8 +33,6 @@ jobs:
             arch: x64
     runs-on: ${{ matrix.os }}
     name: Test / ${{ matrix.platform }}-${{ matrix.arch }}
-    env:
-      SFW_DEBUG: true
     steps:
       - uses: holepunchto/actions/bare-base@v1
       - run: |
