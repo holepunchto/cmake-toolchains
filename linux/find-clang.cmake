@@ -1,34 +1,5 @@
-find_program(
-  clang
-  NAMES
-    clang-22
-    clang-21
-    clang-20
-    clang-19
-    clang-18
-    clang
-  REQUIRED
-)
+include("${CMAKE_CURRENT_LIST_DIR}/../llvm/find-llvm.cmake")
 
-find_program(
-  clang++
-  NAMES
-    clang++-22
-    clang++-21
-    clang++-20
-    clang++-19
-    clang++-18
-    clang++
-  REQUIRED
-)
+find_llvm_runtime(clang clang++ clang-scan-deps lld)
 
-find_program(
-  clang-scan-deps
-  NAMES
-    clang-scan-deps-22
-    clang-scan-deps-21
-    clang-scan-deps-20
-    clang-scan-deps-19
-    clang-scan-deps-18
-    clang-scan-deps
-)
+use_llvm_runtime(C CXX ASM)
