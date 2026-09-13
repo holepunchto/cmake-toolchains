@@ -52,9 +52,11 @@ function(find_llvm_runtime)
   endforeach()
 endfunction()
 
-# Points the drivers at the resource directory and the linker, both of which
-# ship in packages of their own and so sit outside the directory the drivers
-# would otherwise search.
+# Points the drivers at the resource directory, which ships in a package of its
+# own and so sits outside the directory they would otherwise search. `lld` gets
+# the same treatment wherever the driver invokes it, which is everywhere the
+# `-B` search path exists; Windows drives the linker directly and names it
+# through `CMAKE_LINKER_LLD` instead.
 function(use_llvm_runtime)
   set(flags "-resource-dir=${llvm_resource_dir}")
 
