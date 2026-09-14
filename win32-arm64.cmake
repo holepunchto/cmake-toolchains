@@ -6,8 +6,10 @@ include("${CMAKE_CURRENT_LIST_DIR}/win32/find-llvm.cmake")
 set(target aarch64-windows-msvc)
 
 set(CMAKE_LINKER_TYPE LLD)
+set(CMAKE_LINKER_LLD ${lld-link})
 
 set(CMAKE_AR ${llvm-lib})
+set(CMAKE_MT ${llvm-mt})
 set(CMAKE_NM ${llvm-nm})
 set(CMAKE_OBJDUMP ${llvm-objdump})
 set(CMAKE_RANLIB ${llvm-ranlib})
