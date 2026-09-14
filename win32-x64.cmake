@@ -26,6 +26,8 @@ set(CMAKE_ASM_COMPILER ${clang-cl})
 set(CMAKE_ASM_COMPILER_TARGET ${target})
 set(CMAKE_ASM_COMPILE_OPTIONS_MSVC_DEBUG_INFORMATION_FORMAT_Embedded -Z7)
 
+set(CMAKE_ASM_MASM_COMPILER ${llvm-ml64})
+
 if(nasm)
   set(CMAKE_ASM_NASM_COMPILER ${nasm})
 endif()
