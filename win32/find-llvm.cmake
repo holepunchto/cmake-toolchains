@@ -1,6 +1,6 @@
 include("${CMAKE_CURRENT_LIST_DIR}/../llvm/find-llvm.cmake")
 
-find_llvm_runtime(clang-cl llvm-lib llvm-nm llvm-objdump llvm-ranlib llvm-rc llvm-strip lld-link)
+find_llvm_runtime(clang-cl llvm-lib llvm-mt llvm-nm llvm-objdump llvm-ranlib llvm-rc llvm-strip lld-link)
 
 # On Windows the linker is invoked directly rather than through the driver, so
 # `CMAKE_LINKER_TYPE` resolves to a path instead of `-fuse-ld=`. Naming the one
@@ -8,6 +8,14 @@ find_llvm_runtime(clang-cl llvm-lib llvm-nm llvm-objdump llvm-ranlib llvm-rc llv
 # has no `-B` to point at its sibling package with.
 if(lld-link)
   set(CMAKE_LINKER_LLD "${lld-link}")
+endif()
+
+# CMake embeds a manifest into every executable it links for an MSVC target,
+# which it drives itself rather than leaving to the linker. It looks for the
+# tool on the path, where the Windows SDK only puts it inside a developer
+# command prompt.
+if(llvm-mt)
+  set(CMAKE_MT "${llvm-mt}")
 endif()
 
 use_llvm_runtime(C CXX ASM)
