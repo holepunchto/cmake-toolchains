@@ -10,3 +10,10 @@ for (const fixture of [
 ]) {
   compile(fixture)
 }
+
+// Objective-C only exists on the Apple platforms.
+for (const fixture of ['test/fixtures/objc/executable', 'test/fixtures/objcxx/executable']) {
+  compile(fixture, {
+    targets: ['darwin-arm64', 'darwin-x64', 'ios-arm64', 'ios-arm64-simulator', 'ios-x64-simulator']
+  })
+}

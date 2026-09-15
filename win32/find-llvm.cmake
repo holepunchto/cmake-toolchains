@@ -1,103 +1,12 @@
-find_program(
-  clang-cl
-  NAMES clang-cl
-  PATHS "C:/Program Files/LLVM/bin"
-  NO_DEFAULT_PATH
-)
+include("${CMAKE_CURRENT_LIST_DIR}/../llvm/find-llvm.cmake")
 
-find_program(
-  clang-cl
-  NAMES clang-cl
-  REQUIRED
-)
+# Windows drives the linker, the manifest tool and the MASM assembler directly
+# rather than through the compiler driver, so each is named here rather than
+# left to CMake, which searches the path and would find a system LLVM or, for
+# the latter two, nothing at all outside a developer command prompt.
+#
+# They are resolved together because `find_llvm_runtime()` answers only the
+# first call, which is what keeps a `try_compile()` from paying for its own.
+find_llvm_runtime(clang-cl llvm-lib llvm-ml64 llvm-mt llvm-nm llvm-objdump llvm-ranlib llvm-rc llvm-strip lld-link)
 
-find_program(
-  llvm-lib
-  NAMES llvm-lib
-  PATHS "C:/Program Files/LLVM/bin"
-  NO_DEFAULT_PATH
-)
-
-find_program(
-  llvm-lib
-  NAMES llvm-lib
-  REQUIRED
-)
-
-find_program(
-  llvm-nm
-  NAMES llvm-nm
-  PATHS "C:/Program Files/LLVM/bin"
-  NO_DEFAULT_PATH
-)
-
-find_program(
-  llvm-nm
-  NAMES llvm-nm
-  REQUIRED
-)
-
-find_program(
-  llvm-objdump
-  NAMES llvm-objdump
-  PATHS "C:/Program Files/LLVM/bin"
-  NO_DEFAULT_PATH
-)
-
-find_program(
-  llvm-objdump
-  NAMES llvm-objdump
-  REQUIRED
-)
-
-find_program(
-  llvm-ranlib
-  NAMES llvm-ranlib
-  PATHS "C:/Program Files/LLVM/bin"
-  NO_DEFAULT_PATH
-)
-
-find_program(
-  llvm-ranlib
-  NAMES llvm-ranlib
-  REQUIRED
-)
-
-find_program(
-  llvm-mt
-  NAMES llvm-mt
-  PATHS "C:/Program Files/LLVM/bin"
-  NO_DEFAULT_PATH
-)
-
-find_program(
-  llvm-mt
-  NAMES llvm-mt
-  REQUIRED
-)
-
-find_program(
-  llvm-strip
-  NAMES llvm-strip
-  PATHS "C:/Program Files/LLVM/bin"
-  NO_DEFAULT_PATH
-)
-
-find_program(
-  llvm-strip
-  NAMES llvm-strip
-  REQUIRED
-)
-
-find_program(
-  llvm-rc
-  NAMES llvm-rc
-  PATHS "C:/Program Files/LLVM/bin"
-  NO_DEFAULT_PATH
-)
-
-find_program(
-  llvm-rc
-  NAMES llvm-rc
-  REQUIRED
-)
+use_llvm_runtime(C CXX ASM)

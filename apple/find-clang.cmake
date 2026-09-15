@@ -1,61 +1,7 @@
-if(NOT APPLE_CLANG)
-  find_program(
-    clang
-    NAMES clang
-    PATHS
-      /opt/homebrew/opt/llvm@22/bin
-      /opt/homebrew/opt/llvm@21/bin
-      /opt/homebrew/opt/llvm@20/bin
-      /opt/homebrew/opt/llvm@19/bin
-      /opt/homebrew/opt/llvm@18/bin
-      /opt/homebrew/opt/llvm/bin
-    NO_DEFAULT_PATH
-  )
-endif()
+include("${CMAKE_CURRENT_LIST_DIR}/../llvm/find-llvm.cmake")
 
-find_program(
-  clang
-  NAMES clang
-  REQUIRED
-)
+find_llvm_runtime(clang clang++ clang-scan-deps)
 
-if(NOT APPLE_CLANG)
-  find_program(
-    clang++
-    NAMES clang++
-    PATHS
-      /opt/homebrew/opt/llvm@22/bin
-      /opt/homebrew/opt/llvm@21/bin
-      /opt/homebrew/opt/llvm@20/bin
-      /opt/homebrew/opt/llvm@19/bin
-      /opt/homebrew/opt/llvm@18/bin
-      /opt/homebrew/opt/llvm/bin
-    NO_DEFAULT_PATH
-  )
-endif()
+use_llvm_runtime(C CXX ASM OBJC OBJCXX)
 
-find_program(
-  clang
-  NAMES clang++
-  REQUIRED
-)
-
-if(NOT APPLE_CLANG)
-  find_program(
-    clang-scan-deps
-    NAMES clang-scan-deps
-    PATHS
-      /opt/homebrew/opt/llvm@22/bin
-      /opt/homebrew/opt/llvm@21/bin
-      /opt/homebrew/opt/llvm@20/bin
-      /opt/homebrew/opt/llvm@19/bin
-      /opt/homebrew/opt/llvm@18/bin
-      /opt/homebrew/opt/llvm/bin
-    NO_DEFAULT_PATH
-  )
-endif()
-
-find_program(
-  clang-scan-deps
-  NAMES clang-scan-deps
-)
+list(APPEND CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/use-sanitizers.cmake")

@@ -22,6 +22,7 @@
     "android",
     "apple",
     "linux",
+    "llvm",
     "win32"
   ],
   "assets": [
@@ -29,6 +30,7 @@
     "android",
     "apple",
     "linux",
+    "llvm",
     "win32"
   ],
   "scripts": {
@@ -50,6 +52,9 @@
   "homepage": "https://github.com/holepunchto/cmake-toolchains#readme",
   "dependencies": {
     "require-asset": "^1.0.2"
+  },
+  "peerDependencies": {
+    "llvm-runtime": "^22"
   },
   "devDependencies": {
     "bare-fs": "^4.4.4",
