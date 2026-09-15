@@ -4,7 +4,7 @@ set(CMAKE_SYSTEM_PROCESSOR x86_64)
 include("${CMAKE_CURRENT_LIST_DIR}/apple/find-clang.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/apple/find-nasm.cmake")
 
-set(target x86_64-apple-ios14.0-simulator)
+set(target x86_64-apple-ios15.0-simulator)
 
 set(CMAKE_C_COMPILER ${clang})
 set(CMAKE_C_COMPILER_TARGET ${target})
@@ -27,7 +27,7 @@ set(CMAKE_OBJCXX_COMPILER ${clang++})
 set(CMAKE_OBJCXX_COMPILER_TARGET ${target})
 
 set(CMAKE_OSX_SYSROOT iphonesimulator)
-set(CMAKE_OSX_DEPLOYMENT_TARGET 14.0)
+set(CMAKE_OSX_DEPLOYMENT_TARGET 15.0)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_MACOSX_BUNDLE OFF)
