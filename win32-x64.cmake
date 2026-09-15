@@ -4,7 +4,7 @@ set(CMAKE_SYSTEM_PROCESSOR AMD64)
 include("${CMAKE_CURRENT_LIST_DIR}/win32/find-llvm.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/win32/find-nasm.cmake")
 
-set(target x86_64-windows-msvc)
+set(target x86_64-pc-windows-msvc)
 
 set(CMAKE_LINKER_TYPE LLD)
 set(CMAKE_LINKER_LLD ${lld-link})

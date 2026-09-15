@@ -3,7 +3,7 @@ set(CMAKE_SYSTEM_PROCESSOR ARM64)
 
 include("${CMAKE_CURRENT_LIST_DIR}/win32/find-llvm.cmake")
 
-set(target aarch64-windows-msvc)
+set(target aarch64-pc-windows-msvc)
 
 set(CMAKE_LINKER_TYPE LLD)
 set(CMAKE_LINKER_LLD ${lld-link})
