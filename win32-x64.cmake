@@ -6,6 +6,15 @@ include("${CMAKE_CURRENT_LIST_DIR}/win32/find-nasm.cmake")
 
 set(target x86_64-pc-windows-msvc)
 
+find_llvm_builtins("${clang-cl}" "${target}" llvm_builtins)
+
+# CMake links an MSVC target with the linker rather than the compiler, so
+# nothing adds the compiler runtime builtins, and a static library that calls
+# into them carries no record of the dependency.
+foreach(type EXE SHARED MODULE)
+  string(APPEND CMAKE_${type}_LINKER_FLAGS_INIT " \"${llvm_builtins}\"")
+endforeach()
+
 set(CMAKE_LINKER_TYPE LLD)
 set(CMAKE_LINKER_LLD ${lld-link})
 

@@ -52,6 +52,49 @@ function(find_llvm_runtime)
   endforeach()
 endfunction()
 
+# Asks the driver where the compiler runtime builtins are and writes the answer
+# to a cache variable. Where CMake drives the linker directly rather than going
+# through the compiler, nothing adds them to a link, and a static library that
+# calls into them carries no record of the dependency.
+#
+# The driver is asked rather than told, because the answer moves with the
+# resource directory and with however compiler-rt happens to name and lay out
+# its libraries.
+function(find_llvm_builtins compiler target result)
+  if(DEFINED CACHE{${result}})
+    return()
+  endif()
+
+  execute_process(
+    COMMAND "${compiler}"
+      "-resource-dir=${llvm_resource_dir}"
+      "--target=${target}"
+      --rtlib=compiler-rt
+      --print-libgcc-file-name
+    OUTPUT_VARIABLE path
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE status
+    ERROR_VARIABLE error
+    ERROR_STRIP_TRAILING_WHITESPACE
+  )
+
+  if(NOT status EQUAL 0)
+    message(FATAL_ERROR "Cannot ask '${compiler}' for the compiler runtime builtins: ${error}")
+  endif()
+
+  # The driver answers with where it would look, whether or not anything is
+  # there, so a target the runtime libraries were not built for only shows up
+  # as a missing file at link time.
+  if(NOT EXISTS "${path}")
+    message(FATAL_ERROR
+      "'llvm-runtime' has no compiler runtime builtins for '${target}'. The "
+      "driver expects them at '${path}'.\n"
+    )
+  endif()
+
+  set(${result} "${path}" CACHE FILEPATH "Path to the compiler runtime builtins")
+endfunction()
+
 # Points the drivers at the resource directory, which ships in a package of its
 # own and so sits outside the directory they would otherwise search. `lld` gets
 # the same treatment wherever the driver invokes it, which is everywhere the
