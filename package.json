@@ -54,13 +54,14 @@
     "require-asset": "^1.0.2"
   },
   "peerDependencies": {
-    "llvm-runtime": "^22"
+    "llvm-runtime": "^22 || ^23"
   },
   "devDependencies": {
     "bare-fs": "^4.4.4",
     "bare-path": "^3.0.0",
     "brittle": "^3.7.0",
     "cmake-runtime": "^4.1.1",
+    "llvm-runtime": "^22.1.8",
     "lunte": "^1.8.0",
     "newline-decoder": "^1.0.2",
     "ninja-runtime": "^1.13.1",
