@@ -1,23 +1,12 @@
 include_guard(GLOBAL)
 
-# Names the sanitizer runtimes on the link ahead of the libraries of a target.
-#
-# Apple's libSystem re-exports part of the sanitizer interfaces by way of
-# `libsystem_sanitizers.dylib`, and libpthread and libm are in turn re-export
-# stubs for libSystem. As CMake lists the libraries of a target ahead of the
-# runtime that the driver appends, linking any of those stubs binds the shared
-# symbols to Apple's implementation rather than to the runtime the program
-# actually loads, which then answers with state it never initialized.
-#
-# The driver is asked what it would link rather than the flags being read for a
-# sanitizer, because it is the driver that decides what any given `-fsanitize`
-# amounts to, and its answer names the runtimes for the target being built for.
-# This runs as the last step of `project()`, which is the first point at which
-# the flags of the languages have been assembled and so can be asked about.
+# Apple's libSystem re-exports part of the sanitizer interfaces, and libpthread
+# and libm are stubs for libSystem. CMake lists the libraries of a target ahead
+# of the runtime the driver appends, so without naming the runtimes first the
+# sanitizer symbols bind to Apple's implementation rather than to the runtime
+# the program loads.
 function(use_apple_sanitizer_runtimes)
-  # Either language will do, as the sanitizers of a build are not language
-  # specific, but only one of them is enabled in some projects. The toolchain
-  # names a compiler for both regardless, so ask which are in use.
+  # Sanitizers are not language specific, but only one language may be enabled.
   get_property(languages GLOBAL PROPERTY ENABLED_LANGUAGES)
 
   if(C IN_LIST languages)

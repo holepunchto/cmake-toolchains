@@ -7,18 +7,18 @@ set(target arm-linux-gnueabi)
 
 set(CMAKE_LINKER_TYPE LLD)
 
-set(CMAKE_C_COMPILER ${clang})
+set(CMAKE_C_COMPILER "${clang}")
 set(CMAKE_C_COMPILER_TARGET ${target})
 
-set(CMAKE_CXX_COMPILER ${clang++})
+set(CMAKE_CXX_COMPILER "${clang++}")
 set(CMAKE_CXX_COMPILER_TARGET ${target})
-set(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS ${clang-scan-deps})
+set(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS "${clang-scan-deps}")
 
-set(CMAKE_ASM_COMPILER ${clang})
+set(CMAKE_ASM_COMPILER "${clang}")
 set(CMAKE_ASM_COMPILER_TARGET ${target})
 
 foreach(language IN ITEMS ASM C CXX)
-  string(APPEND CMAKE_${language}_FLAGS_INIT " -march=armv7-a")
+  append_flags_once(CMAKE_${language}_FLAGS_INIT -march=armv7-a)
 endforeach()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

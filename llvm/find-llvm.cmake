@@ -1,13 +1,7 @@
 include_guard()
 
-# Resolves the requested tools from the `llvm-runtime` peer dependency and
-# writes each one to a cache variable of the same name, alongside
-# `llvm_resource_dir`. Failing to resolve is an error rather than a fallback to
-# whatever LLVM happens to be installed, which would otherwise silently swap the
-# toolchain for one this package makes no claims about.
-#
-# Every tool is resolved in a single invocation because toolchain files are
-# re-evaluated for each `try_compile()`, which starts with an empty cache.
+# Resolve every tool in one call, as toolchain files are re-evaluated with an
+# empty cache for each `try_compile()`.
 function(find_llvm_runtime)
   if(DEFINED CACHE{llvm_resource_dir})
     return()
@@ -52,14 +46,6 @@ function(find_llvm_runtime)
   endforeach()
 endfunction()
 
-# Asks the driver where the compiler runtime builtins are and writes the answer
-# to a cache variable. Where CMake drives the linker directly rather than going
-# through the compiler, nothing adds them to a link, and a static library that
-# calls into them carries no record of the dependency.
-#
-# The driver is asked rather than told, because the answer moves with the
-# resource directory and with however compiler-rt happens to name and lay out
-# its libraries.
 function(find_llvm_builtins compiler target result)
   if(DEFINED CACHE{${result}})
     return()
@@ -82,9 +68,7 @@ function(find_llvm_builtins compiler target result)
     message(FATAL_ERROR "Cannot ask '${compiler}' for the compiler runtime builtins: ${error}")
   endif()
 
-  # The driver answers with where it would look, whether or not anything is
-  # there, so a target the runtime libraries were not built for only shows up
-  # as a missing file at link time.
+  # The driver answers with where it would look, not with what is there.
   if(NOT EXISTS "${path}")
     message(FATAL_ERROR
       "'llvm-runtime' has no compiler runtime builtins for '${target}'. The "
@@ -95,30 +79,34 @@ function(find_llvm_builtins compiler target result)
   set(${result} "${path}" CACHE FILEPATH "Path to the compiler runtime builtins")
 endfunction()
 
-# Points the drivers at the resource directory, which ships in a package of its
-# own and so sits outside the directory they would otherwise search. `lld` gets
-# the same treatment wherever the driver invokes it, which is everywhere the
-# `-B` search path exists; Windows drives the linker directly and names it
-# through `CMAKE_LINKER_LLD` instead.
+# Toolchain files are evaluated more than once per configure, so appending
+# unconditionally would repeat the flags.
+function(append_flags_once variable flags)
+  string(FIND "${${variable}}" "${flags}" position)
+
+  if(position EQUAL -1)
+    string(APPEND ${variable} " ${flags}")
+  endif()
+
+  return(PROPAGATE ${variable})
+endfunction()
+
+# The resource directory and `lld` ship in packages of their own, outside where
+# the drivers would look. Windows drives the linker itself and instead names it
+# through `CMAKE_LINKER_LLD`.
 function(use_llvm_runtime)
-  set(flags "-resource-dir=${llvm_resource_dir}")
+  set(flags "\"-resource-dir=${llvm_resource_dir}\"")
 
   if(lld)
     cmake_path(GET lld PARENT_PATH directory)
 
-    string(APPEND flags " -B${directory}")
+    string(APPEND flags " \"-B${directory}\"")
   endif()
 
   set(variables)
 
-  # Toolchain files are evaluated more than once per configure, so only append
-  # what is not already there.
   foreach(language IN LISTS ARGV)
-    string(FIND "${CMAKE_${language}_FLAGS_INIT}" "${flags}" position)
-
-    if(position EQUAL -1)
-      string(APPEND CMAKE_${language}_FLAGS_INIT " ${flags}")
-    endif()
+    append_flags_once(CMAKE_${language}_FLAGS_INIT "${flags}")
 
     list(APPEND variables CMAKE_${language}_FLAGS_INIT)
   endforeach()
