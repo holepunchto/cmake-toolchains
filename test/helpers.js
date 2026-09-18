@@ -61,8 +61,8 @@ function skip(target) {
       return platform !== 'darwin'
     case 'linux-arm':
     case 'linux-arm64':
-    // case 'linux-mips':
-    // case 'linux-mipsel':
+    case 'linux-mips':
+    case 'linux-mipsel':
     case 'linux-ia32':
     case 'linux-riscv64':
     case 'linux-x64':
