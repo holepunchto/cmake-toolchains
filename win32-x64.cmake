@@ -2,7 +2,7 @@ set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR AMD64)
 
 include("${CMAKE_CURRENT_LIST_DIR}/win32/find-llvm.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/win32/find-nasm.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/nasm/find-nasm.cmake")
 
 set(target x86_64-pc-windows-msvc)
 
@@ -36,9 +36,7 @@ set(CMAKE_ASM_COMPILE_OPTIONS_MSVC_DEBUG_INFORMATION_FORMAT_Embedded -Z7)
 
 set(CMAKE_ASM_MASM_COMPILER "${llvm-ml64}")
 
-if(nasm)
-  set(CMAKE_ASM_NASM_COMPILER ${nasm})
-endif()
+set(CMAKE_ASM_NASM_COMPILER "${nasm}")
 
 set(CMAKE_RC_COMPILER "${llvm-rc}")
 
