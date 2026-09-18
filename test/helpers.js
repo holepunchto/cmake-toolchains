@@ -75,8 +75,12 @@ function skip(target) {
   return true
 }
 
-exports.compile = function compile(fixture) {
+exports.compile = function compile(fixture, opts = {}) {
+  const { targets = null } = opts
+
   for (const [target, toolchain] of Object.entries(toolchains)) {
+    if (targets !== null && targets.includes(target) === false) continue
+
     test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
       const source = path.resolve(__dirname, '..', fixture)
       const build = path.join(source, 'build', target)
