@@ -23,6 +23,7 @@
     "apple",
     "linux",
     "llvm",
+    "nasm",
     "win32"
   ],
   "assets": [
@@ -31,6 +32,7 @@
     "apple",
     "linux",
     "llvm",
+    "nasm",
     "win32"
   ],
   "scripts": {
@@ -54,7 +56,8 @@
     "require-asset": "^1.0.2"
   },
   "peerDependencies": {
-    "llvm-runtime": "^22 || ^23"
+    "llvm-runtime": "^22 || ^23",
+    "nasm-runtime": "^2"
   },
   "devDependencies": {
     "bare-fs": "^4.4.4",
@@ -63,6 +66,7 @@
     "cmake-runtime": "^4.1.1",
     "llvm-runtime": "^23.1.0",
     "lunte": "^1.8.0",
+    "nasm-runtime": "^2.16.3",
     "newline-decoder": "^1.0.2",
     "ninja-runtime": "^1.13.1",
     "prettier": "^3.4.2",

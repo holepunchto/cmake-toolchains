@@ -2,7 +2,7 @@ set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR AMD64)
 
 include("${CMAKE_CURRENT_LIST_DIR}/win32/find-llvm.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/win32/find-nasm.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/nasm/find-nasm.cmake")
 
 set(target x86_64-pc-windows-msvc)
 
@@ -36,9 +36,15 @@ set(CMAKE_ASM_COMPILE_OPTIONS_MSVC_DEBUG_INFORMATION_FORMAT_Embedded -Z7)
 
 set(CMAKE_ASM_MASM_COMPILER "${llvm-ml64}")
 
-if(nasm)
-  set(CMAKE_ASM_NASM_COMPILER ${nasm})
-endif()
+set(CMAKE_ASM_NASM_COMPILER "${nasm}")
+
+# Without C or C++ enabled, CMake only infers `win64` from an `x86_64`
+# processor, not `AMD64`.
+set(CMAKE_ASM_NASM_OBJECT_FORMAT win64)
+
+# CMake has no MSVC archive rule for NASM and falls back to `ar` syntax, which
+# `llvm-lib` does not understand.
+set(CMAKE_ASM_NASM_CREATE_STATIC_LIBRARY "<CMAKE_AR> /nologo /machine:x64 <LINK_FLAGS> /out:<TARGET> <OBJECTS>")
 
 set(CMAKE_RC_COMPILER "${llvm-rc}")
 
