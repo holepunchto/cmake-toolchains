@@ -38,6 +38,10 @@ set(CMAKE_ASM_MASM_COMPILER "${llvm-ml64}")
 
 set(CMAKE_ASM_NASM_COMPILER "${nasm}")
 
+# Without C or C++ enabled, CMake only infers `win64` from an `x86_64`
+# processor, not `AMD64`.
+set(CMAKE_ASM_NASM_OBJECT_FORMAT win64)
+
 # CMake has no MSVC archive rule for NASM and falls back to `ar` syntax, which
 # `llvm-lib` does not understand.
 set(CMAKE_ASM_NASM_CREATE_STATIC_LIBRARY "<CMAKE_AR> /nologo /machine:x64 <LINK_FLAGS> /out:<TARGET> <OBJECTS>")
