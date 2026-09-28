@@ -17,3 +17,14 @@ for (const fixture of ['test/fixtures/objc/executable', 'test/fixtures/objcxx/ex
     targets: ['darwin-arm64', 'darwin-x64', 'ios-arm64', 'ios-arm64-simulator', 'ios-x64-simulator']
   })
 }
+
+// NASM is only provided by the x86 toolchains, except those for Android.
+for (const fixture of [
+  'test/fixtures/nasm/executable',
+  'test/fixtures/nasm/shared-library',
+  'test/fixtures/nasm/static-library'
+]) {
+  compile(fixture, {
+    targets: ['darwin-x64', 'ios-x64-simulator', 'linux-ia32', 'linux-x64', 'win32-x64']
+  })
+}
