@@ -38,6 +38,10 @@ set(CMAKE_ASM_MASM_COMPILER "${llvm-ml64}")
 
 set(CMAKE_ASM_NASM_COMPILER "${nasm}")
 
+# CMake has no MSVC archive rule for NASM and falls back to `ar` syntax, which
+# `llvm-lib` does not understand.
+set(CMAKE_ASM_NASM_CREATE_STATIC_LIBRARY "<CMAKE_AR> /nologo /machine:x64 <LINK_FLAGS> /out:<TARGET> <OBJECTS>")
+
 set(CMAKE_RC_COMPILER "${llvm-rc}")
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
