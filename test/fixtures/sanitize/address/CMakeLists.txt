@@ -7,3 +7,7 @@ add_library(lib SHARED lib.c)
 add_executable(exe main.c)
 
 target_link_libraries(exe PRIVATE lib)
+
+enable_testing()
+
+add_test(NAME exe COMMAND exe)

@@ -1,4 +1,4 @@
-const { compile, sanitize } = require('./test/helpers')
+const { compile, sanitize, suppress } = require('./test/helpers')
 
 for (const fixture of [
   'test/fixtures/c/executable',
@@ -45,10 +45,25 @@ const sanitized = [
 
 sanitize('test/fixtures/sanitize/address', 'address', {
   targets: sanitized,
-  report: /AddressSanitizer: heap-buffer-overflow/
+  report: /AddressSanitizer: heap-buffer-overflow/,
+  symbolized: true
 })
 
 sanitize('test/fixtures/sanitize/undefined', 'undefined', {
   targets: sanitized,
   report: /runtime error: signed integer overflow/
+})
+
+// LeakSanitizer only exists on Linux and macOS. Suppressions match against the
+// symbolized stack, so a missing symbolizer leaves the leak unsuppressed.
+suppress('test/fixtures/sanitize/leak', {
+  targets: [
+    'darwin-arm64',
+    'darwin-x64',
+    'linux-arm64',
+    'linux-ia32',
+    'linux-riscv64',
+    'linux-x64'
+  ],
+  report: /LeakSanitizer: detected memory leaks[^]*in leak_memory/
 })
