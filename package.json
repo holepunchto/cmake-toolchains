@@ -58,7 +58,7 @@
   "peerDependencies": {
     "cmake-runtime": "^3 || ^4",
     "llvm-runtime": "^22 || ^23",
-    "nasm-runtime": "^2"
+    "nasm-runtime": "^2 || ^3"
   },
   "devDependencies": {
     "bare-fs": "^4.4.4",
