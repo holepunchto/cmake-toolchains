@@ -3,16 +3,19 @@ const fs = require('fs')
 const path = require('path')
 const cmake = require('cmake-runtime/spawn')
 const cmakeBinary = require('cmake-runtime')()
+const ctestBinary = require('cmake-runtime')('ctest')
 const resourceDir = require('llvm-runtime/resource-dir')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
 const { platform, arch } = require('which-runtime')
 const toolchains = require('..')
 
-try {
-  fs.accessSync(ninja, fs.constants.X_OK)
-} catch {
-  fs.chmodSync(ninja, 0o755)
+for (const binary of [ninja, ctestBinary]) {
+  try {
+    fs.accessSync(binary, fs.constants.X_OK)
+  } catch {
+    fs.chmodSync(binary, 0o755)
+  }
 }
 
 function print(t, stream) {
@@ -130,35 +133,80 @@ exports.compile = function compile(fixture, opts = {}) {
   }
 }
 
+// Only the AddressSanitizer runtime for Windows, which is a DLL, is left on
+// `PATH`. Any symbolizer the sanitizers find must then come from the toolchain.
+function ctest(t, build, env = []) {
+  return spawn(t, [
+    '-E',
+    'env',
+    `PATH=${path.join(resourceDir(), 'lib', 'windows')}`,
+    ...env,
+    '--',
+    ctestBinary,
+    '--test-dir',
+    build,
+    '--verbose'
+  ])
+}
+
+// Reported by the sanitizer runtimes at `verbosity=2`.
+const symbolizer = /Using llvm-symbolizer (found )?at/
+
+function sanitized(sanitizer) {
+  const flags = `-fsanitize=${sanitizer}`
+
+  return {
+    env: [`CFLAGS=${flags}`, `CXXFLAGS=${flags}`, `LDFLAGS=${flags}`],
+    args: ['-DCMAKE_BUILD_TYPE=Debug']
+  }
+}
+
 exports.sanitize = function sanitize(fixture, sanitizer, opts = {}) {
-  const { targets = null, report } = opts
+  const { targets = null, report, symbolized = false } = opts
 
   for (const [target, toolchain] of Object.entries(toolchains)) {
     if (targets !== null && targets.includes(target) === false) continue
 
     test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
-      const flags = `-fsanitize=${sanitizer}`
-
-      const build = await generate(t, fixture, target, toolchain, {
-        env: [`CFLAGS=${flags}`, `CXXFLAGS=${flags}`, `LDFLAGS=${flags}`],
-        args: ['-DCMAKE_BUILD_TYPE=Debug']
-      })
+      const build = await generate(t, fixture, target, toolchain, sanitized(sanitizer))
 
       if (target !== `${platform}-${arch}`) return
 
-      const exe = path.join(build, platform === 'win32' ? 'exe.exe' : 'exe')
-
-      // The AddressSanitizer runtime for Windows is a DLL.
-      const { output } = await spawn(t, [
-        '-E',
-        'env',
-        '--modify',
-        `PATH=path_list_prepend:${path.join(resourceDir(), 'lib', 'windows')}`,
-        '--',
-        exe
-      ])
+      const { output } = await ctest(t, build, symbolized ? ['ASAN_OPTIONS=verbosity=2'] : [])
 
       t.ok(report.test(output), `reports ${report}`)
+
+      if (symbolized) t.ok(symbolizer.test(output), 'uses llvm-symbolizer')
+    })
+  }
+}
+
+exports.suppress = function suppress(fixture, opts = {}) {
+  const { targets = null, report } = opts
+
+  const suppressions = path.resolve(__dirname, '..', fixture, 'suppressions.txt')
+
+  for (const [target, toolchain] of Object.entries(toolchains)) {
+    if (targets !== null && targets.includes(target) === false) continue
+
+    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
+      const build = await generate(t, fixture, target, toolchain, sanitized('address'))
+
+      if (target !== `${platform}-${arch}`) return
+
+      const env = ['ASAN_OPTIONS=detect_leaks=1:verbosity=2']
+
+      const leaked = await ctest(t, build, env)
+
+      t.ok(report.test(leaked.output), `reports ${report}`)
+      t.ok(symbolizer.test(leaked.output), 'uses llvm-symbolizer')
+
+      const suppressed = await ctest(t, build, [
+        ...env,
+        `LSAN_OPTIONS=suppressions=${suppressions}`
+      ])
+
+      t.is(suppressed.code, 0, 'suppresses the leak')
     })
   }
 }
