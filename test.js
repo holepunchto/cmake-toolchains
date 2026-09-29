@@ -1,4 +1,4 @@
-const { compile } = require('./test/helpers')
+const { compile, sanitize } = require('./test/helpers')
 
 for (const fixture of [
   'test/fixtures/c/executable',
@@ -28,3 +28,27 @@ for (const fixture of [
     targets: ['darwin-x64', 'ios-x64-simulator', 'linux-ia32', 'linux-x64', 'win32-x64']
   })
 }
+
+// Sanitizers only exist where `llvm-runtime` ships their runtimes.
+const sanitized = [
+  'darwin-arm64',
+  'darwin-x64',
+  'ios-arm64',
+  'ios-arm64-simulator',
+  'ios-x64-simulator',
+  'linux-arm64',
+  'linux-ia32',
+  'linux-riscv64',
+  'linux-x64',
+  'win32-x64'
+]
+
+sanitize('test/fixtures/sanitize/address', 'address', {
+  targets: sanitized,
+  report: /AddressSanitizer: heap-buffer-overflow/
+})
+
+sanitize('test/fixtures/sanitize/undefined', 'undefined', {
+  targets: sanitized,
+  report: /runtime error: signed integer overflow/
+})

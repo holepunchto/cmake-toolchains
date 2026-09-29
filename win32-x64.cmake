@@ -2,6 +2,7 @@ set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR AMD64)
 
 include("${CMAKE_CURRENT_LIST_DIR}/win32/find-llvm.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/win32/use-sanitizers.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/nasm/find-nasm.cmake")
 
 set(target x86_64-pc-windows-msvc)
@@ -48,7 +49,8 @@ set(CMAKE_ASM_NASM_CREATE_STATIC_LIBRARY "<CMAKE_AR> /nologo /machine:x64 <LINK_
 
 set(CMAKE_RC_COMPILER "${llvm-rc}")
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+use_msvc_sanitizer_runtimes(${target})
+
 set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

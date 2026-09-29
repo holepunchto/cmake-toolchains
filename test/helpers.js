@@ -2,9 +2,11 @@ const test = require('brittle')
 const fs = require('fs')
 const path = require('path')
 const cmake = require('cmake-runtime/spawn')
+const cmakeBinary = require('cmake-runtime')()
+const resourceDir = require('llvm-runtime/resource-dir')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
-const { platform } = require('which-runtime')
+const { platform, arch } = require('which-runtime')
 const toolchains = require('..')
 
 try {
@@ -29,21 +31,62 @@ function print(t, stream) {
     })
 }
 
-async function run(t, referrer, args, opts = {}) {
-  const job = cmake(referrer, { ...opts, args })
+function spawn(t, args) {
+  const job = cmake('cmake', { args })
 
-  await new Promise((resolve, reject) => {
+  let output = ''
+
+  return new Promise((resolve) => {
     print(t, job.stdout)
     print(t, job.stderr)
 
-    job.on('exit', (code) => {
-      if (code === null || code !== 0) {
-        reject(new Error('Failed'))
-      } else {
-        resolve()
-      }
+    job.stdout.on('data', (data) => {
+      output += data
     })
+
+    job.stderr.on('data', (data) => {
+      output += data
+    })
+
+    job.on('exit', (code) => resolve({ code, output }))
   })
+}
+
+async function run(t, args) {
+  const { code } = await spawn(t, args)
+
+  if (code !== 0) throw new Error('Failed')
+}
+
+async function generate(t, fixture, target, toolchain, opts = {}) {
+  const { env = [], args = [] } = opts
+
+  const source = path.resolve(__dirname, '..', fixture)
+  const build = path.join(source, 'build', target)
+
+  await run(t, [
+    '-E',
+    'env',
+    ...env,
+    '--',
+    cmakeBinary,
+    '-S',
+    source,
+    '-B',
+    build,
+    '-G',
+    'Ninja',
+    '--fresh',
+    '--toolchain',
+    toolchain,
+    '-DCMAKE_MESSAGE_LOG_LEVEL=NOTICE',
+    `-DCMAKE_MAKE_PROGRAM=${ninja}`,
+    ...args
+  ])
+
+  await run(t, ['--build', build, '--clean-first'])
+
+  return build
 }
 
 function skip(target) {
@@ -82,24 +125,40 @@ exports.compile = function compile(fixture, opts = {}) {
     if (targets !== null && targets.includes(target) === false) continue
 
     test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
-      const source = path.resolve(__dirname, '..', fixture)
-      const build = path.join(source, 'build', target)
+      await generate(t, fixture, target, toolchain)
+    })
+  }
+}
 
-      await run(t, 'cmake', [
-        '-S',
-        source,
-        '-B',
-        build,
-        '-G',
-        'Ninja',
-        '--fresh',
-        '--toolchain',
-        toolchain,
-        '-DCMAKE_MESSAGE_LOG_LEVEL=NOTICE',
-        `-DCMAKE_MAKE_PROGRAM=${ninja}`
+exports.sanitize = function sanitize(fixture, sanitizer, opts = {}) {
+  const { targets = null, report } = opts
+
+  for (const [target, toolchain] of Object.entries(toolchains)) {
+    if (targets !== null && targets.includes(target) === false) continue
+
+    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
+      const flags = `-fsanitize=${sanitizer}`
+
+      const build = await generate(t, fixture, target, toolchain, {
+        env: [`CFLAGS=${flags}`, `CXXFLAGS=${flags}`, `LDFLAGS=${flags}`],
+        args: ['-DCMAKE_BUILD_TYPE=Debug']
+      })
+
+      if (target !== `${platform}-${arch}`) return
+
+      const exe = path.join(build, platform === 'win32' ? 'exe.exe' : 'exe')
+
+      // The AddressSanitizer runtime for Windows is a DLL.
+      const { output } = await spawn(t, [
+        '-E',
+        'env',
+        '--modify',
+        `PATH=path_list_prepend:${path.join(resourceDir(), 'lib', 'windows')}`,
+        '--',
+        exe
       ])
 
-      await run(t, 'cmake', ['--build', build, '--clean-first'])
+      t.ok(report.test(output), `reports ${report}`)
     })
   }
 }
