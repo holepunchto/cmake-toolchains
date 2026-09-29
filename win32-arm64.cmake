@@ -36,9 +36,10 @@ set(CMAKE_ASM_COMPILE_OPTIONS_MSVC_DEBUG_INFORMATION_FORMAT_Embedded -Z7)
 
 set(CMAKE_RC_COMPILER "${llvm-rc}")
 
-use_msvc_sanitizer_runtimes(${target})
-
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+
+use_msvc_sanitizer_runtimes(${target} RUNTIME_LIBRARY CMAKE_MSVC_RUNTIME_LIBRARY)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 

@@ -7,6 +7,12 @@ include_guard()
 # The flags that enable a sanitizer may come from the environment, which CMake
 # only reads after the toolchain file, so both places are checked.
 function(use_msvc_sanitizer_runtimes target)
+  cmake_parse_arguments(PARSE_ARGV 1 ARGV "" "RUNTIME_LIBRARY" "")
+
+  if(NOT ARGV_RUNTIME_LIBRARY)
+    message(FATAL_ERROR "use_msvc_sanitizer_runtimes() needs a RUNTIME_LIBRARY variable")
+  endif()
+
   set(directory "${llvm_resource_dir}/lib/windows")
 
   set(flags "\"/libpath:${directory}\"")
@@ -20,17 +26,14 @@ function(use_msvc_sanitizer_runtimes target)
       message(FATAL_ERROR "'llvm-runtime' has no AddressSanitizer runtime for '${target}'")
     endif()
 
-    # The toolchain always links the static C runtime, which the static thunk
-    # is for.
     string(APPEND flags " \"${runtime}\" \"/wholearchive:${directory}/clang_rt.asan_static_runtime_thunk-${arch}.lib\"")
 
-    # AddressSanitizer does not support the debug C runtime.
-    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded)
-  else()
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    # The static thunk is for the static C runtime, and AddressSanitizer does
+    # not support the debug one.
+    set(${ARGV_RUNTIME_LIBRARY} MultiThreaded)
   endif()
 
-  set(variables CMAKE_MSVC_RUNTIME_LIBRARY)
+  set(variables ${ARGV_RUNTIME_LIBRARY})
 
   foreach(type IN ITEMS EXE SHARED MODULE)
     append_flags_once(CMAKE_${type}_LINKER_FLAGS_INIT "${flags}")

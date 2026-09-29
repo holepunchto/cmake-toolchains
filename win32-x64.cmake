@@ -49,9 +49,10 @@ set(CMAKE_ASM_NASM_CREATE_STATIC_LIBRARY "<CMAKE_AR> /nologo /machine:x64 <LINK_
 
 set(CMAKE_RC_COMPILER "${llvm-rc}")
 
-use_msvc_sanitizer_runtimes(${target})
-
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+
+use_msvc_sanitizer_runtimes(${target} RUNTIME_LIBRARY CMAKE_MSVC_RUNTIME_LIBRARY)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
