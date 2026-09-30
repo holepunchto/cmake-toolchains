@@ -210,3 +210,25 @@ exports.suppress = function suppress(fixture, opts = {}) {
     })
   }
 }
+
+// A build configured before a tool was first requested holds a cache without
+// it, which removing the tool from the cache reproduces.
+exports.reconfigure = function reconfigure(fixture, tool, opts = {}) {
+  const { targets = null } = opts
+
+  for (const [target, toolchain] of Object.entries(toolchains)) {
+    if (targets !== null && targets.includes(target) === false) continue
+
+    test(
+      `${fixture}, ${target}, reconfigured without ${tool}`,
+      { skip: skip(target), timeout: 120000 },
+      async (t) => {
+        const build = await generate(t, fixture, target, toolchain)
+
+        await run(t, ['-U', tool, build])
+
+        await run(t, ['--build', build])
+      }
+    )
+  }
+}

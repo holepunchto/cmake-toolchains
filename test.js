@@ -1,4 +1,4 @@
-const { compile, sanitize, suppress } = require('./test/helpers')
+const { compile, reconfigure, sanitize, suppress } = require('./test/helpers')
 
 for (const fixture of [
   'test/fixtures/c/executable',
@@ -66,4 +66,24 @@ suppress('test/fixtures/sanitize/leak', {
     'linux-x64'
   ],
   report: /LeakSanitizer: detected memory leaks[^]*in leak_memory/
+})
+
+// Every toolchain that uses `llvm-runtime` asks it for the symbolizer.
+reconfigure('test/fixtures/c/executable', 'llvm-symbolizer', {
+  targets: [
+    'darwin-arm64',
+    'darwin-x64',
+    'ios-arm64',
+    'ios-arm64-simulator',
+    'ios-x64-simulator',
+    'linux-arm',
+    'linux-arm64',
+    'linux-ia32',
+    'linux-mips',
+    'linux-mipsel',
+    'linux-riscv64',
+    'linux-x64',
+    'win32-arm64',
+    'win32-x64'
+  ]
 })
