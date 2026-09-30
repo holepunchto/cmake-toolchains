@@ -118,6 +118,14 @@ function(use_llvm_runtime)
   endforeach()
 endfunction()
 
+# Toolchain files are evaluated more than once per configure, so wrapping the
+# launcher unconditionally would repeat the modification.
+function(modify_test_environment modification)
+  if(NOT modification IN_LIST CMAKE_TEST_LAUNCHER)
+    set(CMAKE_TEST_LAUNCHER "${CMAKE_COMMAND}" -E env --modify "${modification}" -- ${CMAKE_TEST_LAUNCHER} PARENT_SCOPE)
+  endif()
+endfunction()
+
 # The sanitizers look for a symbolizer on `PATH`, which the one from
 # `llvm-runtime` is not on. Appending it leaves any symbolizer the environment
 # already provides in charge.
@@ -125,9 +133,7 @@ function(use_llvm_symbolizer)
   cmake_path(GET llvm-symbolizer PARENT_PATH directory)
   cmake_path(NATIVE_PATH directory directory)
 
-  set(modification "PATH=path_list_append:${directory}")
+  modify_test_environment("PATH=path_list_append:${directory}")
 
-  if(NOT modification IN_LIST CMAKE_TEST_LAUNCHER)
-    set(CMAKE_TEST_LAUNCHER "${CMAKE_COMMAND}" -E env --modify "${modification}" -- ${CMAKE_TEST_LAUNCHER} PARENT_SCOPE)
-  endif()
+  set(CMAKE_TEST_LAUNCHER "${CMAKE_TEST_LAUNCHER}" PARENT_SCOPE)
 endfunction()

@@ -5,7 +5,6 @@ const spawn = require('cmake-runtime/spawn')
 const cmake = require('cmake-runtime')()
 const ctest = require('cmake-runtime')('ctest')
 const llvm = require('llvm-runtime')
-const resourceDir = require('llvm-runtime/resource-dir')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
 const { platform, arch } = require('which-runtime')
@@ -93,13 +92,14 @@ async function generate(t, fixture, target, toolchain, opts = {}) {
   return build
 }
 
-// Only the AddressSanitizer runtime for Windows, which is a DLL, is left on
-// `PATH`. Any symbolizer the sanitizers find must then come from the toolchain.
+// Only the directory of CTest is left on `PATH`, so the symbolizer and the
+// AddressSanitizer runtime for Windows must come from the toolchain. Windows
+// has no empty variables, and libuv refuses to spawn without a `PATH`.
 function runTests(t, build, env = []) {
   return capture(t, [
     '-E',
     'env',
-    `PATH=${path.join(resourceDir(), 'lib', 'windows')}`,
+    `PATH=${path.dirname(ctest)}`,
     ...env,
     '--',
     ctest,
