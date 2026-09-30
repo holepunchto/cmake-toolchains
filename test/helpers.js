@@ -61,6 +61,22 @@ async function run(t, args) {
   if (code !== 0) throw new Error('Failed')
 }
 
+function runTests(t, build, env = []) {
+  return capture(t, [
+    '-E',
+    'env',
+    // Only the directory of CTest is left on `PATH`, so the symbolizer and the
+    // AddressSanitizer runtime for Windows must come from the toolchain.
+    `PATH=${path.dirname(ctest)}`,
+    ...env,
+    '--',
+    ctest,
+    '--test-dir',
+    build,
+    '--verbose'
+  ])
+}
+
 async function generate(t, fixture, target, toolchain, opts = {}) {
   const { env = [], args = [] } = opts
 
@@ -90,23 +106,6 @@ async function generate(t, fixture, target, toolchain, opts = {}) {
   await run(t, ['--build', build, '--clean-first'])
 
   return build
-}
-
-// Only the directory of CTest is left on `PATH`, so the symbolizer and the
-// AddressSanitizer runtime for Windows must come from the toolchain. Windows
-// has no empty variables, and libuv refuses to spawn without a `PATH`.
-function runTests(t, build, env = []) {
-  return capture(t, [
-    '-E',
-    'env',
-    `PATH=${path.dirname(ctest)}`,
-    ...env,
-    '--',
-    ctest,
-    '--test-dir',
-    build,
-    '--verbose'
-  ])
 }
 
 function skip(target) {
