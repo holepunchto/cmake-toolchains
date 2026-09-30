@@ -4,6 +4,7 @@ const path = require('path')
 const cmake = require('cmake-runtime/spawn')
 const cmakeBinary = require('cmake-runtime')()
 const ctestBinary = require('cmake-runtime')('ctest')
+const llvm = require('llvm-runtime')
 const resourceDir = require('llvm-runtime/resource-dir')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
@@ -129,6 +130,26 @@ exports.compile = function compile(fixture, opts = {}) {
 
     test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
       await generate(t, fixture, target, toolchain)
+    })
+  }
+}
+
+// The archiver the host provides may be recent enough to read the bitcode
+// either way, so check that the build asks `llvm-runtime` for it.
+exports.archive = function archive(fixture, opts = {}) {
+  const { targets = null } = opts
+
+  for (const [target, toolchain] of Object.entries(toolchains)) {
+    if (targets !== null && targets.includes(target) === false) continue
+
+    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
+      const build = await generate(t, fixture, target, toolchain)
+
+      const rules = fs.readFileSync(path.join(build, 'CMakeFiles', 'rules.ninja'), 'utf8')
+
+      for (const tool of ['llvm-ar', 'llvm-ranlib']) {
+        t.ok(rules.includes(llvm(tool)), `archives with ${tool} from llvm-runtime`)
+      }
     })
   }
 }
