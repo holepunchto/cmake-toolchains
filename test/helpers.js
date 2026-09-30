@@ -5,7 +5,6 @@ const spawn = require('cmake-runtime/spawn')
 const cmake = require('cmake-runtime')()
 const ctest = require('cmake-runtime')('ctest')
 const llvm = require('llvm-runtime')
-const resourceDir = require('llvm-runtime/resource-dir')
 const ninja = require('ninja-runtime')()
 const NewlineDecoder = require('newline-decoder')
 const { platform, arch } = require('which-runtime')
@@ -93,20 +92,10 @@ async function generate(t, fixture, target, toolchain, opts = {}) {
   return build
 }
 
-// Only the AddressSanitizer runtime for Windows, which is a DLL, is left on
-// `PATH`. Any symbolizer the sanitizers find must then come from the toolchain.
+// With `PATH` cleared, the symbolizer and the AddressSanitizer runtime for
+// Windows must come from the toolchain.
 function runTests(t, build, env = []) {
-  return capture(t, [
-    '-E',
-    'env',
-    `PATH=${path.join(resourceDir(), 'lib', 'windows')}`,
-    ...env,
-    '--',
-    ctest,
-    '--test-dir',
-    build,
-    '--verbose'
-  ])
+  return capture(t, ['-E', 'env', 'PATH=', ...env, '--', ctest, '--test-dir', build, '--verbose'])
 }
 
 function skip(target) {

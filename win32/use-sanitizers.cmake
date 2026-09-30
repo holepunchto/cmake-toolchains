@@ -38,4 +38,13 @@ function(use_msvc_sanitizer_runtimes target)
 
     set(CMAKE_${type}_LINKER_FLAGS_INIT "${CMAKE_${type}_LINKER_FLAGS_INIT}" PARENT_SCOPE)
   endforeach()
+
+  # The AddressSanitizer runtime is a DLL, which tests load from `PATH`. It must
+  # match the import library linked against, so it goes ahead of any runtime
+  # the environment provides.
+  cmake_path(NATIVE_PATH directory native)
+
+  modify_test_environment("PATH=path_list_prepend:${native}")
+
+  set(CMAKE_TEST_LAUNCHER "${CMAKE_TEST_LAUNCHER}" PARENT_SCOPE)
 endfunction()
