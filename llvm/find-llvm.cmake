@@ -95,10 +95,8 @@ function(append_flags_once variable flags)
   string(FIND "${${variable}}" "${flags}" position)
 
   if(position EQUAL -1)
-    string(APPEND ${variable} " ${flags}")
+    set(${variable} "${${variable}} ${flags}" PARENT_SCOPE)
   endif()
-
-  return(PROPAGATE ${variable})
 endfunction()
 
 # The resource directory and `lld` ship in packages of their own, outside where
@@ -113,15 +111,11 @@ function(use_llvm_runtime)
     string(APPEND flags " \"-B${directory}\"")
   endif()
 
-  set(variables)
-
   foreach(language IN LISTS ARGV)
     append_flags_once(CMAKE_${language}_FLAGS_INIT "${flags}")
 
-    list(APPEND variables CMAKE_${language}_FLAGS_INIT)
+    set(CMAKE_${language}_FLAGS_INIT "${CMAKE_${language}_FLAGS_INIT}" PARENT_SCOPE)
   endforeach()
-
-  return(PROPAGATE ${variables})
 endfunction()
 
 # The sanitizers look for a symbolizer on `PATH`, which the one from
@@ -134,8 +128,6 @@ function(use_llvm_symbolizer)
   set(modification "PATH=path_list_append:${directory}")
 
   if(NOT modification IN_LIST CMAKE_TEST_LAUNCHER)
-    set(CMAKE_TEST_LAUNCHER "${CMAKE_COMMAND}" -E env --modify "${modification}" -- ${CMAKE_TEST_LAUNCHER})
+    set(CMAKE_TEST_LAUNCHER "${CMAKE_COMMAND}" -E env --modify "${modification}" -- ${CMAKE_TEST_LAUNCHER} PARENT_SCOPE)
   endif()
-
-  return(PROPAGATE CMAKE_TEST_LAUNCHER)
 endfunction()

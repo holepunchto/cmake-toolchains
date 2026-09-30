@@ -30,16 +30,12 @@ function(use_msvc_sanitizer_runtimes target)
 
     # The static thunk is for the static C runtime, and AddressSanitizer does
     # not support the debug one.
-    set(${ARGV_RUNTIME_LIBRARY} MultiThreaded)
+    set(${ARGV_RUNTIME_LIBRARY} MultiThreaded PARENT_SCOPE)
   endif()
-
-  set(variables ${ARGV_RUNTIME_LIBRARY})
 
   foreach(type IN ITEMS EXE SHARED MODULE)
     append_flags_once(CMAKE_${type}_LINKER_FLAGS_INIT "${flags}")
 
-    list(APPEND variables CMAKE_${type}_LINKER_FLAGS_INIT)
+    set(CMAKE_${type}_LINKER_FLAGS_INIT "${CMAKE_${type}_LINKER_FLAGS_INIT}" PARENT_SCOPE)
   endforeach()
-
-  return(PROPAGATE ${variables})
 endfunction()

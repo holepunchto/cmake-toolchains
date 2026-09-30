@@ -50,15 +50,9 @@ function(use_apple_sanitizer_runtimes)
   list(REMOVE_DUPLICATES runtimes)
   list(JOIN runtimes " " runtimes)
 
-  set(variables)
-
   foreach(type IN ITEMS EXE SHARED MODULE)
-    string(PREPEND CMAKE_${type}_LINKER_FLAGS "${runtimes} ")
-
-    list(APPEND variables CMAKE_${type}_LINKER_FLAGS)
+    set(CMAKE_${type}_LINKER_FLAGS "${runtimes} ${CMAKE_${type}_LINKER_FLAGS}" PARENT_SCOPE)
   endforeach()
-
-  return(PROPAGATE ${variables})
 endfunction()
 
 use_apple_sanitizer_runtimes()
