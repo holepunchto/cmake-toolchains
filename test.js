@@ -1,4 +1,4 @@
-const { compile, reconfigure, sanitize, suppress } = require('./test/helpers')
+const { archive, compile, reconfigure, sanitize, suppress } = require('./test/helpers')
 
 for (const fixture of [
   'test/fixtures/c/executable',
@@ -13,6 +13,25 @@ for (const fixture of [
 
 // Subprojects added with `ExternalProject_Add()` inherit the toolchain.
 compile('test/fixtures/external-project')
+
+// Archives of LTO objects hold bitcode, which only an archiver that matches the
+// compiler can index.
+archive('test/fixtures/lto', {
+  targets: [
+    'darwin-arm64',
+    'darwin-x64',
+    'ios-arm64',
+    'ios-arm64-simulator',
+    'ios-x64-simulator',
+    'linux-arm',
+    'linux-arm64',
+    'linux-ia32',
+    'linux-mips',
+    'linux-mipsel',
+    'linux-riscv64',
+    'linux-x64'
+  ]
+})
 
 // Objective-C only exists on the Apple platforms.
 for (const fixture of ['test/fixtures/objc/executable', 'test/fixtures/objcxx/executable']) {
@@ -90,3 +109,23 @@ reconfigure('test/fixtures/c/executable', 'llvm-symbolizer', {
     'win32-x64'
   ]
 })
+
+// The Apple and Linux toolchains ask `llvm-runtime` for the archiver.
+for (const tool of ['llvm-ar', 'llvm-ranlib']) {
+  reconfigure('test/fixtures/c/static-library', tool, {
+    targets: [
+      'darwin-arm64',
+      'darwin-x64',
+      'ios-arm64',
+      'ios-arm64-simulator',
+      'ios-x64-simulator',
+      'linux-arm',
+      'linux-arm64',
+      'linux-ia32',
+      'linux-mips',
+      'linux-mipsel',
+      'linux-riscv64',
+      'linux-x64'
+    ]
+  })
+}
