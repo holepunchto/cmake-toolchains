@@ -20,3 +20,5 @@ set(CMAKE_ASM_COMPILER_TARGET ${target})
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(VCPKG_TARGET_TRIPLET riscv64-linux)
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")

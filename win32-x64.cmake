@@ -57,3 +57,5 @@ use_msvc_sanitizer_runtimes(${target} RUNTIME_LIBRARY CMAKE_MSVC_RUNTIME_LIBRARY
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(VCPKG_TARGET_TRIPLET x64-windows)
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")

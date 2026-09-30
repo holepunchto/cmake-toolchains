@@ -23,3 +23,5 @@ set(CMAKE_ASM_NASM_COMPILER "${nasm}")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(VCPKG_TARGET_TRIPLET x64-linux)
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")

@@ -25,3 +25,5 @@ endif()
 set(VCPKG_TARGET_TRIPLET x64-android)
 
 include("${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")

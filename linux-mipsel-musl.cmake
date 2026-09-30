@@ -31,3 +31,5 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(VCPKG_TARGET_TRIPLET mipsel-linux-musl)
 
 add_compile_definitions(__MUSL__)
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")
