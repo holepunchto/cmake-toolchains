@@ -1,9 +1,19 @@
 include_guard()
 
 # Resolve every tool in one call, as toolchain files are re-evaluated with an
-# empty cache for each `try_compile()`.
+# empty cache for each `try_compile()`. A cache written before a tool was first
+# requested lacks it, so any tool missing from the cache is resolved even when
+# the others are not.
 function(find_llvm_runtime)
-  if(DEFINED CACHE{llvm_resource_dir})
+  set(missing)
+
+  foreach(tool IN LISTS ARGV)
+    if(NOT DEFINED CACHE{${tool}})
+      list(APPEND missing ${tool})
+    endif()
+  endforeach()
+
+  if(DEFINED CACHE{llvm_resource_dir} AND NOT missing)
     return()
   endif()
 
@@ -14,7 +24,7 @@ function(find_llvm_runtime)
   endif()
 
   execute_process(
-    COMMAND "${node}" "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/resolve.js" ${ARGV}
+    COMMAND "${node}" "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/resolve.js" ${missing}
     OUTPUT_VARIABLE output
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE status
