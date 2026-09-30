@@ -29,3 +29,5 @@ endforeach()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(VCPKG_TARGET_TRIPLET mipsel-linux)
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")

@@ -33,3 +33,5 @@ set(CMAKE_EXE_LINKER_FLAGS_INIT "-static")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(VCPKG_TARGET_TRIPLET arm64-mingw)
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")

@@ -11,6 +11,9 @@ for (const fixture of [
   compile(fixture)
 }
 
+// Subprojects added with `ExternalProject_Add()` inherit the toolchain.
+compile('test/fixtures/external-project')
+
 // Objective-C only exists on the Apple platforms.
 for (const fixture of ['test/fixtures/objc/executable', 'test/fixtures/objcxx/executable']) {
   compile(fixture, {

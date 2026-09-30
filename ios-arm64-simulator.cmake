@@ -28,3 +28,5 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_MACOSX_BUNDLE OFF)
 
 set(VCPKG_TARGET_TRIPLET arm64-ios-simulator)
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")
