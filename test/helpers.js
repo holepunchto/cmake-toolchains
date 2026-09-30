@@ -92,10 +92,21 @@ async function generate(t, fixture, target, toolchain, opts = {}) {
   return build
 }
 
-// With `PATH` cleared, the symbolizer and the AddressSanitizer runtime for
-// Windows must come from the toolchain.
+// Only the directory of CTest is left on `PATH`, so the symbolizer and the
+// AddressSanitizer runtime for Windows must come from the toolchain. Windows
+// has no empty variables, and libuv refuses to spawn without a `PATH`.
 function runTests(t, build, env = []) {
-  return capture(t, ['-E', 'env', 'PATH=', ...env, '--', ctest, '--test-dir', build, '--verbose'])
+  return capture(t, [
+    '-E',
+    'env',
+    `PATH=${path.dirname(ctest)}`,
+    ...env,
+    '--',
+    ctest,
+    '--test-dir',
+    build,
+    '--verbose'
+  ])
 }
 
 function skip(target) {
