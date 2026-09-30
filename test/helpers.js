@@ -1,9 +1,9 @@
 const test = require('brittle')
 const fs = require('fs')
 const path = require('path')
-const cmake = require('cmake-runtime/spawn')
-const cmakeBinary = require('cmake-runtime')()
-const ctestBinary = require('cmake-runtime')('ctest')
+const spawn = require('cmake-runtime/spawn')
+const cmake = require('cmake-runtime')()
+const ctest = require('cmake-runtime')('ctest')
 const llvm = require('llvm-runtime')
 const resourceDir = require('llvm-runtime/resource-dir')
 const ninja = require('ninja-runtime')()
@@ -11,7 +11,7 @@ const NewlineDecoder = require('newline-decoder')
 const { platform, arch } = require('which-runtime')
 const toolchains = require('..')
 
-for (const binary of [ninja, ctestBinary]) {
+for (const binary of [ninja, ctest]) {
   try {
     fs.accessSync(binary, fs.constants.X_OK)
   } catch {
@@ -35,8 +35,8 @@ function print(t, stream) {
     })
 }
 
-function spawn(t, args) {
-  const job = cmake('cmake', { args })
+function capture(t, args) {
+  const job = spawn('cmake', { args })
 
   let output = ''
 
@@ -57,7 +57,7 @@ function spawn(t, args) {
 }
 
 async function run(t, args) {
-  const { code } = await spawn(t, args)
+  const { code } = await capture(t, args)
 
   if (code !== 0) throw new Error('Failed')
 }
@@ -73,7 +73,7 @@ async function generate(t, fixture, target, toolchain, opts = {}) {
     'env',
     ...env,
     '--',
-    cmakeBinary,
+    cmake,
     '-S',
     source,
     '-B',
@@ -93,13 +93,28 @@ async function generate(t, fixture, target, toolchain, opts = {}) {
   return build
 }
 
+// Only the AddressSanitizer runtime for Windows, which is a DLL, is left on
+// `PATH`. Any symbolizer the sanitizers find must then come from the toolchain.
+function runTests(t, build, env = []) {
+  return capture(t, [
+    '-E',
+    'env',
+    `PATH=${path.join(resourceDir(), 'lib', 'windows')}`,
+    ...env,
+    '--',
+    ctest,
+    '--test-dir',
+    build,
+    '--verbose'
+  ])
+}
+
 function skip(target) {
   switch (target) {
     case 'android-arm':
     case 'android-arm64':
     case 'android-ia32':
     case 'android-x64':
-      return platform !== 'darwin'
     case 'darwin-arm64':
     case 'darwin-x64':
     case 'ios-arm64':
@@ -122,52 +137,12 @@ function skip(target) {
   return true
 }
 
-exports.compile = function compile(fixture, opts = {}) {
-  const { targets = null } = opts
-
+function each(targets, name, fn) {
   for (const [target, toolchain] of Object.entries(toolchains)) {
     if (targets !== null && targets.includes(target) === false) continue
 
-    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
-      await generate(t, fixture, target, toolchain)
-    })
+    test(name(target), { skip: skip(target), timeout: 120000 }, (t) => fn(t, target, toolchain))
   }
-}
-
-// The archiver the host provides may be recent enough to read the bitcode
-// either way, so check that the build asks `llvm-runtime` for it.
-exports.archive = function archive(fixture, opts = {}) {
-  const { targets = null } = opts
-
-  for (const [target, toolchain] of Object.entries(toolchains)) {
-    if (targets !== null && targets.includes(target) === false) continue
-
-    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
-      const build = await generate(t, fixture, target, toolchain)
-
-      const rules = fs.readFileSync(path.join(build, 'CMakeFiles', 'rules.ninja'), 'utf8')
-
-      for (const tool of ['llvm-ar', 'llvm-ranlib']) {
-        t.ok(rules.includes(llvm(tool)), `archives with ${tool} from llvm-runtime`)
-      }
-    })
-  }
-}
-
-// Only the AddressSanitizer runtime for Windows, which is a DLL, is left on
-// `PATH`. Any symbolizer the sanitizers find must then come from the toolchain.
-function ctest(t, build, env = []) {
-  return spawn(t, [
-    '-E',
-    'env',
-    `PATH=${path.join(resourceDir(), 'lib', 'windows')}`,
-    ...env,
-    '--',
-    ctestBinary,
-    '--test-dir',
-    build,
-    '--verbose'
-  ])
 }
 
 // Reported by the sanitizer runtimes at `verbosity=2`.
@@ -182,24 +157,56 @@ function sanitized(sanitizer) {
   }
 }
 
+exports.compile = function compile(fixture, opts = {}) {
+  const { targets = null } = opts
+
+  each(
+    targets,
+    (target) => `${fixture}, ${target}`,
+    async (t, target, toolchain) => {
+      await generate(t, fixture, target, toolchain)
+    }
+  )
+}
+
+// The archiver the host provides may be recent enough to read the bitcode
+// either way, so check that the build asks `llvm-runtime` for it.
+exports.archive = function archive(fixture, opts = {}) {
+  const { targets = null } = opts
+
+  each(
+    targets,
+    (target) => `${fixture}, ${target}`,
+    async (t, target, toolchain) => {
+      const build = await generate(t, fixture, target, toolchain)
+
+      const rules = fs.readFileSync(path.join(build, 'CMakeFiles', 'rules.ninja'), 'utf8')
+
+      for (const tool of ['llvm-ar', 'llvm-ranlib']) {
+        t.ok(rules.includes(llvm(tool)), `archives with ${tool} from llvm-runtime`)
+      }
+    }
+  )
+}
+
 exports.sanitize = function sanitize(fixture, sanitizer, opts = {}) {
   const { targets = null, report, symbolized = false } = opts
 
-  for (const [target, toolchain] of Object.entries(toolchains)) {
-    if (targets !== null && targets.includes(target) === false) continue
-
-    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
+  each(
+    targets,
+    (target) => `${fixture}, ${target}`,
+    async (t, target, toolchain) => {
       const build = await generate(t, fixture, target, toolchain, sanitized(sanitizer))
 
       if (target !== `${platform}-${arch}`) return
 
-      const { output } = await ctest(t, build, symbolized ? ['ASAN_OPTIONS=verbosity=2'] : [])
+      const { output } = await runTests(t, build, symbolized ? ['ASAN_OPTIONS=verbosity=2'] : [])
 
       t.ok(report.test(output), `reports ${report}`)
 
       if (symbolized) t.ok(symbolizer.test(output), 'uses llvm-symbolizer')
-    })
-  }
+    }
+  )
 }
 
 exports.suppress = function suppress(fixture, opts = {}) {
@@ -207,29 +214,29 @@ exports.suppress = function suppress(fixture, opts = {}) {
 
   const suppressions = path.resolve(__dirname, '..', fixture, 'suppressions.txt')
 
-  for (const [target, toolchain] of Object.entries(toolchains)) {
-    if (targets !== null && targets.includes(target) === false) continue
-
-    test(`${fixture}, ${target}`, { skip: skip(target), timeout: 120000 }, async (t) => {
+  each(
+    targets,
+    (target) => `${fixture}, ${target}`,
+    async (t, target, toolchain) => {
       const build = await generate(t, fixture, target, toolchain, sanitized('address'))
 
       if (target !== `${platform}-${arch}`) return
 
       const env = ['ASAN_OPTIONS=detect_leaks=1:verbosity=2']
 
-      const leaked = await ctest(t, build, env)
+      const leaked = await runTests(t, build, env)
 
       t.ok(report.test(leaked.output), `reports ${report}`)
       t.ok(symbolizer.test(leaked.output), 'uses llvm-symbolizer')
 
-      const suppressed = await ctest(t, build, [
+      const suppressed = await runTests(t, build, [
         ...env,
         `LSAN_OPTIONS=suppressions=${suppressions}`
       ])
 
       t.is(suppressed.code, 0, 'suppresses the leak')
-    })
-  }
+    }
+  )
 }
 
 // A build configured before a tool was first requested holds a cache without
@@ -237,19 +244,15 @@ exports.suppress = function suppress(fixture, opts = {}) {
 exports.reconfigure = function reconfigure(fixture, tool, opts = {}) {
   const { targets = null } = opts
 
-  for (const [target, toolchain] of Object.entries(toolchains)) {
-    if (targets !== null && targets.includes(target) === false) continue
+  each(
+    targets,
+    (target) => `${fixture}, ${target}, reconfigured without ${tool}`,
+    async (t, target, toolchain) => {
+      const build = await generate(t, fixture, target, toolchain)
 
-    test(
-      `${fixture}, ${target}, reconfigured without ${tool}`,
-      { skip: skip(target), timeout: 120000 },
-      async (t) => {
-        const build = await generate(t, fixture, target, toolchain)
+      await run(t, ['-U', tool, build])
 
-        await run(t, ['-U', tool, build])
-
-        await run(t, ['--build', build])
-      }
-    )
-  }
+      await run(t, ['--build', build])
+    }
+  )
 }
