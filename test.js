@@ -11,8 +11,10 @@ for (const fixture of [
   compile(fixture)
 }
 
-// Subprojects added with `ExternalProject_Add()` inherit the toolchain.
+// Subprojects added with `ExternalProject_Add()` inherit the toolchain, unless
+// the caller names a compiler of its own.
 compile('test/fixtures/external-project')
+compile('test/fixtures/external-project-compiler')
 
 // Archives of LTO objects hold bitcode, which only an archiver that matches the
 // compiler can index.
