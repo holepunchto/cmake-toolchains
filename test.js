@@ -2,13 +2,18 @@ const { archive, compile, reconfigure, sanitize, suppress } = require('./test/he
 
 for (const fixture of [
   'test/fixtures/c/executable',
-  'test/fixtures/c/shared-library',
   'test/fixtures/c/static-library',
   'test/fixtures/cxx/executable',
-  'test/fixtures/cxx/shared-library',
   'test/fixtures/cxx/static-library'
 ]) {
   compile(fixture)
+}
+
+// WebAssembly has no shared libraries.
+for (const fixture of ['test/fixtures/c/shared-library', 'test/fixtures/cxx/shared-library']) {
+  compile(fixture, {
+    targets: Object.keys(require('.')).filter((target) => target !== 'wasi-wasm32')
+  })
 }
 
 // Subprojects added with `ExternalProject_Add()` inherit the toolchain, unless
