@@ -121,12 +121,20 @@ function skip(target) {
     case 'ios-x64-simulator':
       return platform !== 'darwin'
     case 'linux-arm':
+    case 'linux-arm-musl':
     case 'linux-arm64':
+    case 'linux-arm64-musl':
     case 'linux-mips':
+    case 'linux-mips-musl':
+    case 'linux-mips-muslsf':
     case 'linux-mipsel':
+    case 'linux-mipsel-musl':
+    case 'linux-mipsel-muslsf':
     case 'linux-ia32':
+    case 'linux-ia32-musl':
     case 'linux-riscv64':
     case 'linux-x64':
+    case 'linux-x64-musl':
       return platform !== 'linux'
     case 'win32-arm64':
     case 'win32-x64':
@@ -186,6 +194,20 @@ exports.archive = function archive(fixture, opts = {}) {
       for (const tool of ['llvm-ar', 'llvm-ranlib']) {
         t.ok(rules.includes(llvm(tool)), `archives with ${tool} from llvm-runtime`)
       }
+    }
+  )
+}
+
+exports.output = function output(fixture, filename, opts = {}) {
+  const { targets = null } = opts
+
+  each(
+    targets,
+    (target) => `${fixture}, ${target}, outputs ${filename}`,
+    async (t, target, toolchain) => {
+      const build = await generate(t, fixture, target, toolchain)
+
+      t.ok(fs.existsSync(path.join(build, filename)), `outputs ${filename}`)
     }
   )
 }
