@@ -1,4 +1,4 @@
-const { archive, compile, reconfigure, sanitize, suppress } = require('./test/helpers')
+const { archive, compile, output, reconfigure, sanitize, suppress } = require('./test/helpers')
 
 for (const fixture of [
   'test/fixtures/c/executable',
@@ -16,6 +16,11 @@ for (const fixture of ['test/fixtures/c/shared-library', 'test/fixtures/cxx/shar
   })
 }
 
+// WebAssembly executables take the `.wasm` suffix in every language.
+for (const fixture of ['test/fixtures/c/executable', 'test/fixtures/cxx/executable']) {
+  output(fixture, 'exe.wasm', { targets: ['wasi-wasm32'] })
+}
+
 // Subprojects added with `ExternalProject_Add()` inherit the toolchain, unless
 // the caller names a compiler of its own.
 compile('test/fixtures/external-project')
@@ -31,12 +36,20 @@ archive('test/fixtures/lto', {
     'ios-arm64-simulator',
     'ios-x64-simulator',
     'linux-arm',
+    'linux-arm-musl',
     'linux-arm64',
+    'linux-arm64-musl',
     'linux-ia32',
+    'linux-ia32-musl',
     'linux-mips',
+    'linux-mips-musl',
+    'linux-mips-muslsf',
     'linux-mipsel',
+    'linux-mipsel-musl',
+    'linux-mipsel-muslsf',
     'linux-riscv64',
-    'linux-x64'
+    'linux-x64',
+    'linux-x64-musl'
   ]
 })
 
@@ -54,7 +67,15 @@ for (const fixture of [
   'test/fixtures/nasm/static-library'
 ]) {
   compile(fixture, {
-    targets: ['darwin-x64', 'ios-x64-simulator', 'linux-ia32', 'linux-x64', 'win32-x64']
+    targets: [
+      'darwin-x64',
+      'ios-x64-simulator',
+      'linux-ia32',
+      'linux-ia32-musl',
+      'linux-x64',
+      'linux-x64-musl',
+      'win32-x64'
+    ]
   })
 }
 
@@ -106,12 +127,20 @@ reconfigure('test/fixtures/c/executable', 'llvm-symbolizer', {
     'ios-arm64-simulator',
     'ios-x64-simulator',
     'linux-arm',
+    'linux-arm-musl',
     'linux-arm64',
+    'linux-arm64-musl',
     'linux-ia32',
+    'linux-ia32-musl',
     'linux-mips',
+    'linux-mips-musl',
+    'linux-mips-muslsf',
     'linux-mipsel',
+    'linux-mipsel-musl',
+    'linux-mipsel-muslsf',
     'linux-riscv64',
     'linux-x64',
+    'linux-x64-musl',
     'win32-arm64',
     'win32-x64'
   ]
@@ -127,12 +156,20 @@ for (const tool of ['llvm-ar', 'llvm-ranlib']) {
       'ios-arm64-simulator',
       'ios-x64-simulator',
       'linux-arm',
+      'linux-arm-musl',
       'linux-arm64',
+      'linux-arm64-musl',
       'linux-ia32',
+      'linux-ia32-musl',
       'linux-mips',
+      'linux-mips-musl',
+      'linux-mips-muslsf',
       'linux-mipsel',
+      'linux-mipsel-musl',
+      'linux-mipsel-muslsf',
       'linux-riscv64',
-      'linux-x64'
+      'linux-x64',
+      'linux-x64-musl'
     ]
   })
 }
