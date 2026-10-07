@@ -131,6 +131,8 @@ function skip(target) {
     case 'win32-arm64':
     case 'win32-x64':
       return platform !== 'win32'
+    case 'wasi-wasm32':
+      return false
   }
 
   return true
