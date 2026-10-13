@@ -15,6 +15,8 @@ if(NOT DEFINED ANDROID_NDK)
   include("${CMAKE_CURRENT_LIST_DIR}/android/find-ndk.cmake")
 endif()
 
+include("${CMAKE_CURRENT_LIST_DIR}/nasm/find-nasm.cmake")
+
 # https://github.com/android/ndk/issues/243
 if(CMAKE_BUILD_TYPE MATCHES "Release")
   set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -g0")
@@ -25,5 +27,7 @@ endif()
 set(VCPKG_TARGET_TRIPLET x64-android)
 
 include("${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
+
+set(CMAKE_ASM_NASM_COMPILER "${nasm}")
 
 include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")
