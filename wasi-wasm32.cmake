@@ -34,15 +34,18 @@ endforeach()
 # instructions, which are on so that code behaves as it does on every other
 # target. The driver picks the C++ libraries built with them, but leaves out
 # the unwinder they need and the `setjmp()` runtime of wasi-libc.
-set(eh_flags "-fwasm-exceptions -mllvm -wasm-use-legacy-eh=false -mllvm -wasm-enable-sjlj")
-
 foreach(language IN ITEMS C CXX)
-  append_flags_once(CMAKE_${language}_FLAGS_INIT "${eh_flags}")
+  append_flags_once(CMAKE_${language}_FLAGS_INIT "-fwasm-exceptions")
 endforeach()
+
+set(lto_flags "-Wl,-mllvm,-wasm-enable-eh -Wl,-mllvm,-wasm-use-legacy-eh=false -Wl,-mllvm,-wasm-enable-sjlj")
+
+append_flags_once(CMAKE_EXE_LINKER_FLAGS_INIT "${lto_flags}")
 
 set(CMAKE_C_STANDARD_LIBRARIES_INIT "-lsetjmp")
 set(CMAKE_CXX_STANDARD_LIBRARIES_INIT "-lsetjmp -lunwind")
 
+list(APPEND CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/wasi/exceptions.cmake")
 list(APPEND CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/wasi/no-shared-libraries.cmake")
 
 list(REMOVE_DUPLICATES CMAKE_PROJECT_INCLUDE)
