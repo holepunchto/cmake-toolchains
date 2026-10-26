@@ -26,6 +26,8 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET 13.0)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+use_llvm_sanitizer_runtimes("${clang}" ${target})
+
 set(VCPKG_TARGET_TRIPLET arm64-osx)
 
 include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")

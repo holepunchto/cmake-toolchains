@@ -106,6 +106,14 @@ sanitize('test/fixtures/sanitize/undefined', 'undefined', {
   report: /runtime error: signed integer overflow/
 })
 
+// A module built with AddressSanitizer and loaded into a program that was not
+// only reports once the runtime is preloaded, which the launcher does. Only the
+// toolchains that run tests on the host can show it.
+sanitize('test/fixtures/sanitize/preload', 'address', {
+  targets: ['darwin-arm64', 'darwin-x64', 'linux-arm64', 'linux-x64'],
+  report: /AddressSanitizer: heap-buffer-overflow/
+})
+
 // LeakSanitizer only exists on Linux and macOS. Suppressions match against the
 // symbolized stack, so a missing symbolizer leaves the leak unsuppressed.
 suppress('test/fixtures/sanitize/leak', {
