@@ -1,4 +1,12 @@
-const { archive, compile, output, reconfigure, sanitize, suppress } = require('./test/helpers')
+const {
+  archive,
+  compile,
+  output,
+  preload,
+  reconfigure,
+  sanitize,
+  suppress
+} = require('./test/helpers')
 
 for (const fixture of [
   'test/fixtures/c/executable',
@@ -107,9 +115,8 @@ sanitize('test/fixtures/sanitize/undefined', 'undefined', {
 })
 
 // A module built with AddressSanitizer and loaded into a program that was not
-// only reports once the runtime is preloaded, which the launcher does. Only the
-// toolchains that run tests on the host can show it.
-sanitize('test/fixtures/sanitize/preload', 'address', {
+// only reports once the recorded runtime is preloaded.
+preload('test/fixtures/sanitize/preload', {
   targets: ['darwin-arm64', 'darwin-x64', 'linux-arm64', 'linux-x64'],
   report: /AddressSanitizer: heap-buffer-overflow/
 })

@@ -22,7 +22,7 @@ set(CMAKE_ASM_NASM_COMPILER "${nasm}")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-use_llvm_sanitizer_runtimes("${clang}" ${target})
+find_llvm_asan_runtime("${clang}" ${target})
 
 set(VCPKG_TARGET_TRIPLET x64-linux)
 

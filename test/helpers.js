@@ -232,6 +232,49 @@ exports.sanitize = function sanitize(fixture, sanitizer, opts = {}) {
   )
 }
 
+exports.preload = function preload(fixture, opts = {}) {
+  const { targets = null, report } = opts
+
+  each(
+    targets,
+    (target) => `${fixture}, ${target}`,
+    async (t, target, toolchain) => {
+      const build = await generate(t, fixture, target, toolchain, sanitized('address'))
+
+      const runtime = cached(build, 'llvm_asan_runtime')
+
+      t.ok(fs.existsSync(runtime), 'records the AddressSanitizer runtime')
+
+      if (target !== `${platform}-${arch}`) return
+
+      const variable = platform === 'darwin' ? 'DYLD_INSERT_LIBRARIES' : 'LD_PRELOAD'
+
+      // The runtime drops itself from the environment it hands on, so the
+      // program is run directly rather than through CTest.
+      const { output } = await capture(t, [
+        '-E',
+        'env',
+        `${variable}=${runtime}`,
+        '--',
+        path.join(build, 'exe'),
+        path.join(build, 'liblib.so')
+      ])
+
+      t.ok(report.test(output), `reports ${report}`)
+    }
+  )
+}
+
+function cached(build, name) {
+  const cache = fs.readFileSync(path.join(build, 'CMakeCache.txt'), 'utf8')
+
+  const match = cache.match(new RegExp(`^${name}:[A-Z]+=(.*)$`, 'm'))
+
+  if (match === null) throw new Error(`'${name}' is not cached`)
+
+  return match[1]
+}
+
 exports.suppress = function suppress(fixture, opts = {}) {
   const { targets = null, report } = opts
 

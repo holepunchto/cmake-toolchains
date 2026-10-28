@@ -2,3 +2,4 @@ sandbox/
 build/
 node_modules/
 package-lock.json
+coverage/

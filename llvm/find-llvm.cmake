@@ -120,33 +120,10 @@ endfunction()
 
 # Toolchain files are evaluated more than once per configure, so wrapping the
 # launcher unconditionally would repeat the modification.
-#
-# The modifications share one `cmake -E env`, as a nested one would have to pass
-# the variables through a process of its own and the dynamic loader takes
-# `DYLD_INSERT_LIBRARIES` out of the environment that process hands on. A
-# launcher of the project's own is wrapped rather than added to.
 function(modify_test_environment modification)
-  if(modification IN_LIST CMAKE_TEST_LAUNCHER)
-    return()
+  if(NOT modification IN_LIST CMAKE_TEST_LAUNCHER)
+    set(CMAKE_TEST_LAUNCHER "${CMAKE_COMMAND}" -E env --modify "${modification}" -- ${CMAKE_TEST_LAUNCHER} PARENT_SCOPE)
   endif()
-
-  set(launcher ${CMAKE_TEST_LAUNCHER})
-
-  list(LENGTH launcher length)
-
-  if(length GREATER_EQUAL 3)
-    list(SUBLIST launcher 0 3 head)
-  else()
-    set(head)
-  endif()
-
-  if(head STREQUAL "${CMAKE_COMMAND};-E;env")
-    list(INSERT launcher 3 --modify "${modification}")
-  else()
-    set(launcher "${CMAKE_COMMAND}" -E env --modify "${modification}" -- ${launcher})
-  endif()
-
-  set(CMAKE_TEST_LAUNCHER ${launcher} PARENT_SCOPE)
 endfunction()
 
 # The sanitizers look for a symbolizer on `PATH`, which the one from
@@ -161,52 +138,47 @@ function(use_llvm_symbolizer)
   set(CMAKE_TEST_LAUNCHER "${CMAKE_TEST_LAUNCHER}" PARENT_SCOPE)
 endfunction()
 
-# A module built with AddressSanitizer and loaded into a program that was not,
-# such as an addon in a prebuilt runtime, reports that its interceptors are not
-# working: they have to be installed before anything allocates. Preloading the
-# runtime puts it ahead of the program rather than behind a `dlopen()`.
+# A module built with AddressSanitizer only reports inside a program that was
+# not, such as an addon in a prebuilt runtime, once the runtime is preloaded.
+# The path is recorded for `bare-make test env` to do so.
 #
 # The flags that enable a sanitizer may come from the environment, which CMake
 # only reads after the toolchain file, so both places are checked.
-function(use_llvm_sanitizer_runtimes compiler target)
+function(find_llvm_asan_runtime compiler target)
+  if(DEFINED CACHE{llvm_asan_runtime})
+    return()
+  endif()
+
   if(NOT "$ENV{CFLAGS} $ENV{CXXFLAGS} ${CMAKE_C_FLAGS} ${CMAKE_CXX_FLAGS}" MATCHES "-fsanitize=([^ ]*,)?address([ ,]|$)")
     return()
   endif()
 
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(name libclang_rt.asan_osx_dynamic.dylib)
-    set(variable DYLD_INSERT_LIBRARIES)
   else()
     set(name libclang_rt.asan.so)
-    set(variable LD_PRELOAD)
   endif()
 
-  if(NOT DEFINED CACHE{llvm_asan_runtime})
-    execute_process(
-      COMMAND "${compiler}"
-        "-resource-dir=${llvm_resource_dir}"
-        "--target=${target}"
-        "-print-file-name=${name}"
-      OUTPUT_VARIABLE runtime
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-      RESULT_VARIABLE status
-      ERROR_VARIABLE error
-      ERROR_STRIP_TRAILING_WHITESPACE
-    )
+  execute_process(
+    COMMAND "${compiler}"
+      "-resource-dir=${llvm_resource_dir}"
+      "--target=${target}"
+      "-print-file-name=${name}"
+    OUTPUT_VARIABLE path
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE status
+    ERROR_VARIABLE error
+    ERROR_STRIP_TRAILING_WHITESPACE
+  )
 
-    if(NOT status EQUAL 0)
-      message(FATAL_ERROR "Cannot ask '${compiler}' for the AddressSanitizer runtime: ${error}")
-    endif()
-
-    # The driver answers with the name alone when it has no such file.
-    if(NOT EXISTS "${runtime}")
-      message(FATAL_ERROR "'llvm-runtime' has no AddressSanitizer runtime for '${target}'")
-    endif()
-
-    set(llvm_asan_runtime "${runtime}" CACHE FILEPATH "Path to the AddressSanitizer runtime")
+  if(NOT status EQUAL 0)
+    message(FATAL_ERROR "Cannot ask '${compiler}' for the AddressSanitizer runtime: ${error}")
   endif()
 
-  modify_test_environment("${variable}=path_list_prepend:${llvm_asan_runtime}")
+  # The driver answers with the name alone when it has no such file.
+  if(NOT EXISTS "${path}")
+    message(FATAL_ERROR "'llvm-runtime' has no AddressSanitizer runtime for '${target}'")
+  endif()
 
-  set(CMAKE_TEST_LAUNCHER "${CMAKE_TEST_LAUNCHER}" PARENT_SCOPE)
+  set(llvm_asan_runtime "${path}" CACHE FILEPATH "Path to the AddressSanitizer runtime")
 endfunction()

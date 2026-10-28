@@ -18,7 +18,3 @@ target_compile_options(exe PRIVATE -fno-sanitize=address)
 target_link_options(exe PRIVATE -fno-sanitize=address)
 
 target_link_libraries(exe PRIVATE ${CMAKE_DL_LIBS})
-
-enable_testing()
-
-add_test(NAME exe COMMAND exe "$<TARGET_FILE:lib>")
