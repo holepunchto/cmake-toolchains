@@ -19,8 +19,6 @@ set(CMAKE_ASM_COMPILER_TARGET ${target})
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_llvm_asan_runtime("${clang}" ${target})
-
 set(VCPKG_TARGET_TRIPLET arm64-linux)
 
 include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")

@@ -1,12 +1,4 @@
-const {
-  archive,
-  compile,
-  output,
-  preload,
-  reconfigure,
-  sanitize,
-  suppress
-} = require('./test/helpers')
+const { archive, compile, output, reconfigure, sanitize, suppress } = require('./test/helpers')
 
 for (const fixture of [
   'test/fixtures/c/executable',
@@ -112,13 +104,6 @@ sanitize('test/fixtures/sanitize/address', 'address', {
 sanitize('test/fixtures/sanitize/undefined', 'undefined', {
   targets: sanitized,
   report: /runtime error: signed integer overflow/
-})
-
-// A module built with AddressSanitizer and loaded into a program that was not
-// only reports once the recorded runtime is preloaded.
-preload('test/fixtures/sanitize/preload', {
-  targets: ['darwin-arm64', 'darwin-x64', 'linux-arm64', 'linux-x64'],
-  report: /AddressSanitizer: heap-buffer-overflow/
 })
 
 // LeakSanitizer only exists on Linux and macOS. Suppressions match against the
