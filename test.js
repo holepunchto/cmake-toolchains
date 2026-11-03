@@ -30,6 +30,10 @@ compile('test/fixtures/external-project-compiler')
 // compiler can index.
 archive('test/fixtures/lto', {
   targets: [
+    'android-arm',
+    'android-arm64',
+    'android-ia32',
+    'android-x64',
     'darwin-arm64',
     'darwin-x64',
     'ios-arm64',
@@ -123,6 +127,10 @@ suppress('test/fixtures/sanitize/leak', {
 // Every toolchain that uses `llvm-runtime` asks it for the symbolizer.
 reconfigure('test/fixtures/c/executable', 'llvm-symbolizer', {
   targets: [
+    'android-arm',
+    'android-arm64',
+    'android-ia32',
+    'android-x64',
     'darwin-arm64',
     'darwin-x64',
     'ios-arm64',
@@ -148,10 +156,14 @@ reconfigure('test/fixtures/c/executable', 'llvm-symbolizer', {
   ]
 })
 
-// The Apple and Linux toolchains ask `llvm-runtime` for the archiver.
+// The Android, Apple, and Linux toolchains ask `llvm-runtime` for the archiver.
 for (const tool of ['llvm-ar', 'llvm-ranlib']) {
   reconfigure('test/fixtures/c/static-library', tool, {
     targets: [
+      'android-arm',
+      'android-arm64',
+      'android-ia32',
+      'android-x64',
       'darwin-arm64',
       'darwin-x64',
       'ios-arm64',
