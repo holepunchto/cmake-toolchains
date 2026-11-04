@@ -61,11 +61,11 @@
     "require-asset": "^1.0.2"
   },
   "peerDependencies": {
-    "cmake-runtime": "^3 || ^4",
-    "llvm-runtime": "^22 || ^23",
-    "musl-sysroot": "*",
-    "nasm-runtime": "^2 || ^3",
-    "wasi-sysroot": "*"
+    "cmake-runtime": "^3.29.1 || ^4",
+    "llvm-runtime": "^23.1.6-0",
+    "musl-sysroot": "^0.1.1",
+    "nasm-runtime": "^2.16.3 || ^3.2.0",
+    "wasi-sysroot": "^0.1.1"
   },
   "peerDependenciesMeta": {
     "musl-sysroot": {
@@ -80,7 +80,7 @@
     "bare-path": "^3.0.0",
     "brittle": "^3.7.0",
     "cmake-runtime": "^4.1.1",
-    "llvm-runtime": "^23.1.5",
+    "llvm-runtime": "^23.1.6-0",
     "lunte": "^1.8.0",
     "musl-sysroot": "^0.1.1",
     "nasm-runtime": "^3.2.0",

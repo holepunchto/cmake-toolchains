@@ -21,6 +21,35 @@ for (const fixture of ['test/fixtures/c/executable', 'test/fixtures/cxx/executab
   output(fixture, 'exe.wasm', { targets: ['wasi-wasm32'] })
 }
 
+// Static executables link the static libraries of the sysroot, whose debug
+// sections may be compressed, as those of the NDK are with zstd. Apple
+// platforms have no static executables, and Windows selects a static C runtime
+// rather than linking with `-static`.
+compile('test/fixtures/c/static-executable', {
+  targets: [
+    'android-arm',
+    'android-arm64',
+    'android-ia32',
+    'android-x64',
+    'linux-arm',
+    'linux-arm-musl',
+    'linux-arm64',
+    'linux-arm64-musl',
+    'linux-ia32',
+    'linux-ia32-musl',
+    'linux-mips',
+    'linux-mips-musl',
+    'linux-mips-muslsf',
+    'linux-mipsel',
+    'linux-mipsel-musl',
+    'linux-mipsel-muslsf',
+    'linux-riscv64',
+    'linux-x64',
+    'linux-x64-musl',
+    'wasi-wasm32'
+  ]
+})
+
 // Subprojects added with `ExternalProject_Add()` inherit the toolchain, unless
 // the caller names a compiler of its own.
 compile('test/fixtures/external-project')
