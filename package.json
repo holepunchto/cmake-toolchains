@@ -62,7 +62,7 @@
   },
   "peerDependencies": {
     "cmake-runtime": "^3.29.1 || ^4",
-    "llvm-runtime": "^23.1.6-0",
+    "llvm-runtime": "^23.1.5 || ^23.1.6-0",
     "musl-sysroot": "^0.1.1",
     "nasm-runtime": "^2.16.3 || ^3.2.0",
     "wasi-sysroot": "^0.1.1"
