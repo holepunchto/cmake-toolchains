@@ -1,6 +1,8 @@
 include("${CMAKE_CURRENT_LIST_DIR}/../llvm/find-llvm.cmake")
 
-find_llvm_runtime(clang clang++ clang-scan-deps llvm-ar llvm-ranlib llvm-symbolizer)
+# Apple platforms link with the system linker, but `lld` is resolved all the
+# same so that builds that also target bare metal from the host find it.
+find_llvm_runtime(clang clang++ clang-scan-deps llvm-ar llvm-ranlib llvm-symbolizer lld)
 
 use_llvm_runtime(C CXX ASM OBJC OBJCXX)
 
