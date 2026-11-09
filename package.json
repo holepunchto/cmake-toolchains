@@ -89,7 +89,7 @@
     "bare-path": "^3.0.0",
     "brittle": "^3.7.0",
     "cmake-runtime": "^4.1.1",
-    "llvm-runtime": "^23.1.6-0",
+    "llvm-runtime": "^23.1.6-1",
     "lunte": "^1.8.0",
     "musl-sysroot": "^0.1.1",
     "nasm-runtime": "^3.2.0",
