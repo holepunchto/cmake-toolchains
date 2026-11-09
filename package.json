@@ -95,6 +95,7 @@
     "nasm-runtime": "^3.2.0",
     "newline-decoder": "^1.0.2",
     "ninja-runtime": "^1.13.1",
+    "picolibc-sysroot": "^0.1.0",
     "prettier": "^3.4.2",
     "prettier-config-holepunch": "^2.0.0",
     "wasi-sysroot": "^0.1.1",
