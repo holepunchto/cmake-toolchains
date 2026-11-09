@@ -1,18 +1,24 @@
 const { archive, compile, output, reconfigure, sanitize, suppress } = require('./test/helpers')
 
-for (const fixture of [
-  'test/fixtures/c/executable',
-  'test/fixtures/c/static-library',
-  'test/fixtures/cxx/executable',
-  'test/fixtures/cxx/static-library'
-]) {
+const freertos = (target) => target.startsWith('freertos-')
+
+for (const fixture of ['test/fixtures/c/static-library', 'test/fixtures/cxx/static-library']) {
   compile(fixture)
 }
 
-// WebAssembly has no shared libraries.
+// FreeRTOS executables need the linker script and startup code of a board.
+for (const fixture of ['test/fixtures/c/executable', 'test/fixtures/cxx/executable']) {
+  compile(fixture, {
+    targets: Object.keys(require('.')).filter((target) => !freertos(target))
+  })
+}
+
+// WebAssembly and FreeRTOS have no shared libraries.
 for (const fixture of ['test/fixtures/c/shared-library', 'test/fixtures/cxx/shared-library']) {
   compile(fixture, {
-    targets: Object.keys(require('.')).filter((target) => target !== 'wasi-wasm32')
+    targets: Object.keys(require('.')).filter(
+      (target) => target !== 'wasi-wasm32' && !freertos(target)
+    )
   })
 }
 
@@ -65,6 +71,8 @@ archive('test/fixtures/lto', {
     'android-x64',
     'darwin-arm64',
     'darwin-x64',
+    'freertos-armv8m',
+    'freertos-riscv32',
     'ios-arm64',
     'ios-arm64-simulator',
     'ios-x64-simulator',
@@ -185,7 +193,8 @@ reconfigure('test/fixtures/c/executable', 'llvm-symbolizer', {
   ]
 })
 
-// The Android, Apple, and Linux toolchains ask `llvm-runtime` for the archiver.
+// The Android, Apple, FreeRTOS, and Linux toolchains ask `llvm-runtime` for the
+// archiver.
 for (const tool of ['llvm-ar', 'llvm-ranlib']) {
   reconfigure('test/fixtures/c/static-library', tool, {
     targets: [
@@ -195,6 +204,8 @@ for (const tool of ['llvm-ar', 'llvm-ranlib']) {
       'android-x64',
       'darwin-arm64',
       'darwin-x64',
+      'freertos-armv8m',
+      'freertos-riscv32',
       'ios-arm64',
       'ios-arm64-simulator',
       'ios-x64-simulator',

@@ -22,10 +22,12 @@
     "android",
     "apple",
     "external-project",
+    "freertos",
     "linux",
     "llvm",
     "musl",
     "nasm",
+    "picolibc",
     "wasi",
     "win32"
   ],
@@ -34,10 +36,13 @@
     "android",
     "apple",
     "external-project",
+    "freertos",
     "linux",
     "llvm",
     "musl",
     "nasm",
+    "picolibc",
+    "wasi",
     "win32"
   ],
   "scripts": {
@@ -65,10 +70,14 @@
     "llvm-runtime": "^23.1.5 || ^23.1.6-0",
     "musl-sysroot": "^0.1.1",
     "nasm-runtime": "^2.16.3 || ^3.2.0",
+    "picolibc-sysroot": "^0.1.0",
     "wasi-sysroot": "^0.1.1"
   },
   "peerDependenciesMeta": {
     "musl-sysroot": {
+      "optional": true
+    },
+    "picolibc-sysroot": {
       "optional": true
     },
     "wasi-sysroot": {
