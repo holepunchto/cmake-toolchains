@@ -1,18 +1,85 @@
 const { archive, compile, output, reconfigure, sanitize, suppress } = require('./test/helpers')
 
-for (const fixture of [
-  'test/fixtures/c/executable',
-  'test/fixtures/c/static-library',
-  'test/fixtures/cxx/executable',
-  'test/fixtures/cxx/static-library'
-]) {
+for (const fixture of ['test/fixtures/c/static-library', 'test/fixtures/cxx/static-library']) {
   compile(fixture)
 }
 
-// WebAssembly has no shared libraries.
+compile('test/fixtures/c/executable')
+
+// There is no C++ standard library for FreeRTOS yet.
+compile('test/fixtures/cxx/executable', {
+  targets: [
+    'android-arm',
+    'android-arm64',
+    'android-ia32',
+    'android-x64',
+    'darwin-arm64',
+    'darwin-x64',
+    'ios-arm64',
+    'ios-arm64-simulator',
+    'ios-x64-simulator',
+    'linux-arm',
+    'linux-arm-musl',
+    'linux-arm64',
+    'linux-arm64-musl',
+    'linux-ia32',
+    'linux-ia32-musl',
+    'linux-mips',
+    'linux-mips-musl',
+    'linux-mips-muslsf',
+    'linux-mipsel',
+    'linux-mipsel-musl',
+    'linux-mipsel-muslsf',
+    'linux-riscv64',
+    'linux-x64',
+    'linux-x64-musl',
+    'mingw-arm64',
+    'mingw-x64',
+    'wasi-wasm32',
+    'win32-arm64',
+    'win32-x64'
+  ]
+})
+
+// The linker script of a board replaces the generic one of picolibc, which two
+// sets of memory regions would otherwise conflict over.
+compile('test/fixtures/freertos/linker-script', {
+  targets: ['freertos-armv8m', 'freertos-riscv32']
+})
+
+// WebAssembly and FreeRTOS have no shared libraries.
 for (const fixture of ['test/fixtures/c/shared-library', 'test/fixtures/cxx/shared-library']) {
   compile(fixture, {
-    targets: Object.keys(require('.')).filter((target) => target !== 'wasi-wasm32')
+    targets: [
+      'android-arm',
+      'android-arm64',
+      'android-ia32',
+      'android-x64',
+      'darwin-arm64',
+      'darwin-x64',
+      'ios-arm64',
+      'ios-arm64-simulator',
+      'ios-x64-simulator',
+      'linux-arm',
+      'linux-arm-musl',
+      'linux-arm64',
+      'linux-arm64-musl',
+      'linux-ia32',
+      'linux-ia32-musl',
+      'linux-mips',
+      'linux-mips-musl',
+      'linux-mips-muslsf',
+      'linux-mipsel',
+      'linux-mipsel-musl',
+      'linux-mipsel-muslsf',
+      'linux-riscv64',
+      'linux-x64',
+      'linux-x64-musl',
+      'mingw-arm64',
+      'mingw-x64',
+      'win32-arm64',
+      'win32-x64'
+    ]
   })
 }
 
@@ -65,6 +132,8 @@ archive('test/fixtures/lto', {
     'android-x64',
     'darwin-arm64',
     'darwin-x64',
+    'freertos-armv8m',
+    'freertos-riscv32',
     'ios-arm64',
     'ios-arm64-simulator',
     'ios-x64-simulator',
@@ -185,7 +254,8 @@ reconfigure('test/fixtures/c/executable', 'llvm-symbolizer', {
   ]
 })
 
-// The Android, Apple, and Linux toolchains ask `llvm-runtime` for the archiver.
+// The Android, Apple, FreeRTOS, and Linux toolchains ask `llvm-runtime` for the
+// archiver.
 for (const tool of ['llvm-ar', 'llvm-ranlib']) {
   reconfigure('test/fixtures/c/static-library', tool, {
     targets: [
@@ -195,6 +265,8 @@ for (const tool of ['llvm-ar', 'llvm-ranlib']) {
       'android-x64',
       'darwin-arm64',
       'darwin-x64',
+      'freertos-armv8m',
+      'freertos-riscv32',
       'ios-arm64',
       'ios-arm64-simulator',
       'ios-x64-simulator',
