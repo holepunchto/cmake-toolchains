@@ -36,6 +36,10 @@ compile('test/fixtures/cxx/executable', {
     'mingw-arm64',
     'mingw-x64',
     'wasi-wasm32',
+    'watchos-arm64',
+    'watchos-arm64-32',
+    'watchos-arm64-simulator',
+    'watchos-x64-simulator',
     'win32-arm64',
     'win32-x64'
   ]
@@ -77,6 +81,10 @@ for (const fixture of ['test/fixtures/c/shared-library', 'test/fixtures/cxx/shar
       'linux-x64-musl',
       'mingw-arm64',
       'mingw-x64',
+      'watchos-arm64',
+      'watchos-arm64-32',
+      'watchos-arm64-simulator',
+      'watchos-x64-simulator',
       'win32-arm64',
       'win32-x64'
     ]
@@ -151,14 +159,28 @@ archive('test/fixtures/lto', {
     'linux-mipsel-muslsf',
     'linux-riscv64',
     'linux-x64',
-    'linux-x64-musl'
+    'linux-x64-musl',
+    'watchos-arm64',
+    'watchos-arm64-32',
+    'watchos-arm64-simulator',
+    'watchos-x64-simulator'
   ]
 })
 
 // Objective-C only exists on the Apple platforms.
 for (const fixture of ['test/fixtures/objc/executable', 'test/fixtures/objcxx/executable']) {
   compile(fixture, {
-    targets: ['darwin-arm64', 'darwin-x64', 'ios-arm64', 'ios-arm64-simulator', 'ios-x64-simulator']
+    targets: [
+      'darwin-arm64',
+      'darwin-x64',
+      'ios-arm64',
+      'ios-arm64-simulator',
+      'ios-x64-simulator',
+      'watchos-arm64',
+      'watchos-arm64-32',
+      'watchos-arm64-simulator',
+      'watchos-x64-simulator'
+    ]
   })
 }
 
@@ -178,6 +200,7 @@ for (const fixture of [
       'linux-ia32-musl',
       'linux-x64',
       'linux-x64-musl',
+      'watchos-x64-simulator',
       'win32-x64'
     ]
   })
@@ -249,6 +272,10 @@ reconfigure('test/fixtures/c/executable', 'llvm-symbolizer', {
     'linux-riscv64',
     'linux-x64',
     'linux-x64-musl',
+    'watchos-arm64',
+    'watchos-arm64-32',
+    'watchos-arm64-simulator',
+    'watchos-x64-simulator',
     'win32-arm64',
     'win32-x64'
   ]
@@ -284,7 +311,11 @@ for (const tool of ['llvm-ar', 'llvm-ranlib']) {
       'linux-mipsel-muslsf',
       'linux-riscv64',
       'linux-x64',
-      'linux-x64-musl'
+      'linux-x64-musl',
+      'watchos-arm64',
+      'watchos-arm64-32',
+      'watchos-arm64-simulator',
+      'watchos-x64-simulator'
     ]
   })
 }
