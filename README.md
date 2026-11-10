@@ -41,6 +41,8 @@ This writes the path of the host toolchain file to the `CMAKE_HOST_TOOLCHAIN_FIL
 | macOS    |                  | `darwin-arm64`, `darwin-x64`                                                                                      |
 | iOS      |                  | `ios-arm64`                                                                                                       |
 | iOS      | Simulator        | `ios-arm64-simulator`, `ios-x64-simulator`                                                                        |
+| watchOS  |                  | `watchos-arm64`, `watchos-arm64-32`                                                                               |
+| watchOS  | Simulator        | `watchos-arm64-simulator`, `watchos-x64-simulator`                                                                |
 | Linux    | glibc            | `linux-arm`, `linux-arm64`, `linux-ia32`, `linux-mips`, `linux-mipsel`, `linux-riscv64`, `linux-x64`              |
 | Linux    | musl             | `linux-arm-musl`, `linux-arm64-musl`, `linux-ia32-musl`, `linux-mips-musl`, `linux-mipsel-musl`, `linux-x64-musl` |
 | Linux    | musl, soft float | `linux-mips-muslsf`, `linux-mipsel-muslsf`                                                                        |
@@ -59,7 +61,7 @@ The toolchains resolve their tools from peer dependencies, which must be install
 - [`wasi-sysroot`](https://github.com/holepunchto/wasi-sysroot) for the WASI target.
 - [`picolibc-sysroot`](https://github.com/holepunchto/picolibc-sysroot) for the FreeRTOS targets.
 
-The Android toolchains also need an Android NDK, which is found through the `ANDROID_HOME` environment variable. The macOS and iOS toolchains need the Apple SDKs that ship with Xcode.
+The Android toolchains also need an Android NDK, which is found through the `ANDROID_HOME` environment variable. The macOS, iOS, and watchOS toolchains need the Apple SDKs that ship with Xcode.
 
 ## License
 

@@ -119,6 +119,10 @@ function skip(target) {
     case 'ios-arm64':
     case 'ios-arm64-simulator':
     case 'ios-x64-simulator':
+    case 'watchos-arm64':
+    case 'watchos-arm64-32':
+    case 'watchos-arm64-simulator':
+    case 'watchos-x64-simulator':
       return platform !== 'darwin'
     case 'linux-arm':
     case 'linux-arm-musl':

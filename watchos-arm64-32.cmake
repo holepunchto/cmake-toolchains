@@ -1,0 +1,32 @@
+set(CMAKE_SYSTEM_NAME watchOS)
+set(CMAKE_SYSTEM_PROCESSOR arm64_32)
+
+include("${CMAKE_CURRENT_LIST_DIR}/apple/find-clang.cmake")
+
+set(target arm64_32-apple-watchos10.0)
+
+set(CMAKE_C_COMPILER "${clang}")
+set(CMAKE_C_COMPILER_TARGET ${target})
+
+set(CMAKE_CXX_COMPILER "${clang++}")
+set(CMAKE_CXX_COMPILER_TARGET ${target})
+set(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS "${clang-scan-deps}")
+
+set(CMAKE_ASM_COMPILER "${clang}")
+set(CMAKE_ASM_COMPILER_TARGET ${target})
+
+set(CMAKE_OBJC_COMPILER "${clang}")
+set(CMAKE_OBJC_COMPILER_TARGET ${target})
+
+set(CMAKE_OBJCXX_COMPILER "${clang++}")
+set(CMAKE_OBJCXX_COMPILER_TARGET ${target})
+
+set(CMAKE_OSX_SYSROOT watchos)
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.0)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_MACOSX_BUNDLE OFF)
+
+set(VCPKG_TARGET_TRIPLET arm6432-watchos)
+
+include("${CMAKE_CURRENT_LIST_DIR}/external-project/use-toolchain.cmake")
