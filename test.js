@@ -1,24 +1,85 @@
 const { archive, compile, output, reconfigure, sanitize, suppress } = require('./test/helpers')
 
-const freertos = (target) => target.startsWith('freertos-')
-
 for (const fixture of ['test/fixtures/c/static-library', 'test/fixtures/cxx/static-library']) {
   compile(fixture)
 }
 
-// FreeRTOS executables need the linker script and startup code of a board.
-for (const fixture of ['test/fixtures/c/executable', 'test/fixtures/cxx/executable']) {
-  compile(fixture, {
-    targets: Object.keys(require('.')).filter((target) => !freertos(target))
-  })
-}
+compile('test/fixtures/c/executable')
+
+// There is no C++ standard library for FreeRTOS yet.
+compile('test/fixtures/cxx/executable', {
+  targets: [
+    'android-arm',
+    'android-arm64',
+    'android-ia32',
+    'android-x64',
+    'darwin-arm64',
+    'darwin-x64',
+    'ios-arm64',
+    'ios-arm64-simulator',
+    'ios-x64-simulator',
+    'linux-arm',
+    'linux-arm-musl',
+    'linux-arm64',
+    'linux-arm64-musl',
+    'linux-ia32',
+    'linux-ia32-musl',
+    'linux-mips',
+    'linux-mips-musl',
+    'linux-mips-muslsf',
+    'linux-mipsel',
+    'linux-mipsel-musl',
+    'linux-mipsel-muslsf',
+    'linux-riscv64',
+    'linux-x64',
+    'linux-x64-musl',
+    'mingw-arm64',
+    'mingw-x64',
+    'wasi-wasm32',
+    'win32-arm64',
+    'win32-x64'
+  ]
+})
+
+// The linker script of a board replaces the generic one of picolibc, which two
+// sets of memory regions would otherwise conflict over.
+compile('test/fixtures/freertos/linker-script', {
+  targets: ['freertos-armv8m', 'freertos-riscv32']
+})
 
 // WebAssembly and FreeRTOS have no shared libraries.
 for (const fixture of ['test/fixtures/c/shared-library', 'test/fixtures/cxx/shared-library']) {
   compile(fixture, {
-    targets: Object.keys(require('.')).filter(
-      (target) => target !== 'wasi-wasm32' && !freertos(target)
-    )
+    targets: [
+      'android-arm',
+      'android-arm64',
+      'android-ia32',
+      'android-x64',
+      'darwin-arm64',
+      'darwin-x64',
+      'ios-arm64',
+      'ios-arm64-simulator',
+      'ios-x64-simulator',
+      'linux-arm',
+      'linux-arm-musl',
+      'linux-arm64',
+      'linux-arm64-musl',
+      'linux-ia32',
+      'linux-ia32-musl',
+      'linux-mips',
+      'linux-mips-musl',
+      'linux-mips-muslsf',
+      'linux-mipsel',
+      'linux-mipsel-musl',
+      'linux-mipsel-muslsf',
+      'linux-riscv64',
+      'linux-x64',
+      'linux-x64-musl',
+      'mingw-arm64',
+      'mingw-x64',
+      'win32-arm64',
+      'win32-x64'
+    ]
   })
 }
 

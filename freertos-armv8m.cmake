@@ -30,6 +30,11 @@ foreach(language IN ITEMS ASM C CXX)
   append_flags_once(CMAKE_${language}_FLAGS_INIT "-mfpu=fpv5-sp-d16")
 endforeach()
 
+# Executables are laid out by the linker script of the board they run on. Until
+# a project passes one with `-T`, the generic one of picolibc stands in, so that
+# builds that link executables of their own still succeed.
+append_flags_once(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,--default-script=picolibc.ld")
+
 # Linking an executable takes the linker script and startup code of a board,
 # which only the firmware that embeds the build has.
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
