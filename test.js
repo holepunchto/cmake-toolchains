@@ -6,6 +6,10 @@ for (const fixture of ['test/fixtures/c/static-library', 'test/fixtures/cxx/stat
 
 compile('test/fixtures/c/executable')
 
+// Linking a whole archive takes a link feature that CMake only defines once it
+// identifies the linker, which it doesn't for FreeRTOS and WASI.
+compile('test/fixtures/c/whole-archive')
+
 // There is no C++ standard library for FreeRTOS yet.
 compile('test/fixtures/cxx/executable', {
   targets: [
