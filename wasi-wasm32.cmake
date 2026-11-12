@@ -30,6 +30,17 @@ foreach(language IN ITEMS ASM C CXX)
   set(CMAKE_EXECUTABLE_SUFFIX_${language} ".wasm")
 endforeach()
 
+# CMake only defines the `WHOLE_ARCHIVE` link feature once it identifies the
+# linker, which it never does here, as nothing is linked while checking the
+# compiler.
+set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE
+  "LINKER:--whole-archive"
+  "<LINK_ITEM>"
+  "LINKER:--no-whole-archive"
+)
+set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED TRUE)
+set(CMAKE_LINK_LIBRARY_WHOLE_ARCHIVE_ATTRIBUTES LIBRARY_TYPE=STATIC DEDUPLICATION=YES OVERRIDE=DEFAULT)
+
 # C++ exceptions and `setjmp()` both lower to the WebAssembly exception handling
 # instructions, which are on so that code behaves as it does on every other
 # target. The driver picks the C++ libraries built with them, but leaves out
