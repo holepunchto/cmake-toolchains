@@ -27,9 +27,15 @@ add_library(freertos_qemu STATIC "${CMAKE_CURRENT_LIST_DIR}/runner.c")
 
 target_link_libraries(freertos_qemu PUBLIC freertos_kernel)
 
-link_libraries(freertos_qemu)
+block()
+  set(executable "$<STREQUAL:$<TARGET_PROPERTY:TYPE>,EXECUTABLE>")
 
-# Otherwise, lld would only load the runner, and with it the kernel and the heap,
-# while wrapping `main()`. That comes too late for it to define the symbols that
-# the linker script of picolibc provides in terms of each other.
-add_link_options(-Wl,--wrap=main -Wl,--undefined=__wrap_main)
+  # Only executables link the runner, as a library that did would require it in
+  # any export set that the library is installed with.
+  link_libraries("$<BUILD_INTERFACE:$<${executable}:freertos_qemu>>")
+
+  # Otherwise, lld would only load the runner, and with it the kernel and the
+  # heap, while wrapping `main()`. That comes too late for it to define the
+  # symbols that the linker script of picolibc provides in terms of each other.
+  add_link_options("$<${executable}:LINKER:--wrap=main,--undefined=__wrap_main>")
+endblock()
