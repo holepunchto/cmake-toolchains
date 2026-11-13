@@ -63,9 +63,15 @@ compile('test/fixtures/freertos/linker-script', {
   targets: ['freertos-armv8m', 'freertos-riscv32']
 })
 
-// Tests run bare-metal under QEMU when asked to, with semihosting carrying the
-// command line, the console and the exit status.
+// Tests run under QEMU when asked to, with semihosting carrying the command
+// line, the console and the exit status.
 emulate('test/fixtures/freertos/qemu', {
+  targets: ['freertos-armv8m', 'freertos-riscv32']
+})
+
+// The `main()` of a test runs as a task of the FreeRTOS kernel, so it can start
+// tasks of its own, each with its own `_Thread_local` block.
+emulate('test/fixtures/freertos/kernel', {
   targets: ['freertos-armv8m', 'freertos-riscv32']
 })
 

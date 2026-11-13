@@ -40,6 +40,7 @@ if(FREERTOS_QEMU)
 
   use_qemu(
     SYSTEM arm
+    PORT GCC_ARM_CM33_NTZ_NONSECURE
     OPTIONS -M mps2-an505 -cpu cortex-m33
     FLASH 0x10000000
     FLASH_SIZE 0x400000
