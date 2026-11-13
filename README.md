@@ -65,13 +65,15 @@ The Android toolchains also need an Android NDK, which is found through the `AND
 
 ### Running FreeRTOS tests under QEMU
 
-The FreeRTOS toolchains can run executables under [QEMU](https://www.qemu.org) to test code that doesn't need the kernel. Pass `-DFREERTOS_QEMU=ON` when configuring, and CTest will run each test bare-metal on the `virt` machine for `freertos-riscv32` and on the `mps2-an505` machine for `freertos-armv8m`:
+The FreeRTOS toolchains can run executables under [QEMU](https://www.qemu.org) on top of the FreeRTOS kernel. Pass `-DFREERTOS_QEMU=ON` when configuring, and CTest will run each test on the `virt` machine for `freertos-riscv32` and on the `mps2-an505` machine for `freertos-armv8m`:
 
 ```
 cmake -S . -B build --toolchain freertos-riscv32.cmake -DFREERTOS_QEMU=ON
 ```
 
 Executables are linked with the startup code and memory layout of the machine instead of those of a board, and use semihosting for their console, command line and exit status. This requires `qemu-system-arm` or `qemu-system-riscv32` on `PATH`.
+
+The kernel is downloaded when the project is configured. It provides the `freertos_kernel` target before the project adds any targets of its own. The `main()` of each executable runs as a task with a 64 KiB stack. The C library is thread-safe, and each task has its own `_Thread_local` storage.
 
 ## License
 

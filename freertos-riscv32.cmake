@@ -41,6 +41,7 @@ if(FREERTOS_QEMU)
 
   use_qemu(
     SYSTEM riscv32
+    PORT GCC_RISC_V
     OPTIONS -M virt -bios none
     FLASH 0x80000000
     FLASH_SIZE 0x400000

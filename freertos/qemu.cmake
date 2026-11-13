@@ -1,11 +1,11 @@
 include_guard()
 
-# Runs executables bare-metal under QEMU, without the FreeRTOS kernel, so that
-# tests of code that doesn't need it can run in place of on a board. Semihosting
-# stands in for the console, the command line and the exit status, which takes
-# startup code of its own and a memory layout that fits the machine.
+# Runs executables under QEMU on top of the FreeRTOS kernel, so that tests can
+# run in place of on a board. Semihosting stands in for the console, the command
+# line and the exit status, which takes startup code of its own and a memory
+# layout that fits the machine.
 function(use_qemu)
-  cmake_parse_arguments(PARSE_ARGV 0 ARGV "" "SYSTEM;FLASH;FLASH_SIZE;RAM;RAM_SIZE" "OPTIONS")
+  cmake_parse_arguments(PARSE_ARGV 0 ARGV "" "SYSTEM;PORT;FLASH;FLASH_SIZE;RAM;RAM_SIZE" "OPTIONS")
 
   find_program(qemu-system-${ARGV_SYSTEM} NAMES qemu-system-${ARGV_SYSTEM} REQUIRED)
 
@@ -26,4 +26,8 @@ function(use_qemu)
     --
     PARENT_SCOPE
   )
+
+  set(FREERTOS_PORT ${ARGV_PORT} PARENT_SCOPE)
+
+  set(CMAKE_PROJECT_INCLUDE "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/kernel/kernel.cmake" PARENT_SCOPE)
 endfunction()
