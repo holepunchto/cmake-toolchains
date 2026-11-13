@@ -268,6 +268,26 @@ exports.suppress = function suppress(fixture, opts = {}) {
   )
 }
 
+exports.emulate = function emulate(fixture, opts = {}) {
+  const { targets = null } = opts
+
+  each(
+    targets,
+    (target) => `${fixture}, ${target}, under QEMU`,
+    async (t, target, toolchain) => {
+      if (platform === 'win32') return t.comment('QEMU is not installed')
+
+      const build = await generate(t, fixture, target, toolchain, {
+        args: ['-DFREERTOS_QEMU=ON']
+      })
+
+      const { code } = await runTests(t, build)
+
+      t.is(code, 0, 'runs the tests under QEMU')
+    }
+  )
+}
+
 // A build configured before a tool was first requested holds a cache without
 // it, which removing the tool from the cache reproduces.
 exports.reconfigure = function reconfigure(fixture, tool, opts = {}) {

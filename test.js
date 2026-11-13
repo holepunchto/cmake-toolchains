@@ -1,4 +1,12 @@
-const { archive, compile, output, reconfigure, sanitize, suppress } = require('./test/helpers')
+const {
+  archive,
+  compile,
+  emulate,
+  output,
+  reconfigure,
+  sanitize,
+  suppress
+} = require('./test/helpers')
 
 for (const fixture of ['test/fixtures/c/static-library', 'test/fixtures/cxx/static-library']) {
   compile(fixture)
@@ -52,6 +60,12 @@ compile('test/fixtures/cxx/executable', {
 // The linker script of a board replaces the generic one of picolibc, which two
 // sets of memory regions would otherwise conflict over.
 compile('test/fixtures/freertos/linker-script', {
+  targets: ['freertos-armv8m', 'freertos-riscv32']
+})
+
+// Tests run bare-metal under QEMU when asked to, with semihosting carrying the
+// command line, the console and the exit status.
+emulate('test/fixtures/freertos/qemu', {
   targets: ['freertos-armv8m', 'freertos-riscv32']
 })
 
