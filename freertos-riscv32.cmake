@@ -4,25 +4,24 @@ set(CMAKE_SYSTEM_PROCESSOR riscv32)
 include("${CMAKE_CURRENT_LIST_DIR}/freertos/find-clang.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/picolibc/find-picolibc.cmake")
 
-set(target riscv32-unknown-none-elf)
+set(CMAKE_C_COMPILER_TARGET riscv32-unknown-none-elf)
 
-find_llvm_builtins("${clang}" "${target}" llvm_builtins)
+find_llvm_builtins("${clang}" "${CMAKE_C_COMPILER_TARGET}" llvm_builtins)
 
-find_picolibc_sysroot("${target}" picolibc_sysroot)
+find_picolibc_sysroot("${CMAKE_C_COMPILER_TARGET}" picolibc_sysroot)
 
 set(CMAKE_SYSROOT "${picolibc_sysroot}")
 
 set(CMAKE_LINKER_TYPE LLD)
 
 set(CMAKE_C_COMPILER "${clang}")
-set(CMAKE_C_COMPILER_TARGET ${target})
 
 set(CMAKE_CXX_COMPILER "${clang++}")
-set(CMAKE_CXX_COMPILER_TARGET ${target})
+set(CMAKE_CXX_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 set(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS "${clang-scan-deps}")
 
 set(CMAKE_ASM_COMPILER "${clang}")
-set(CMAKE_ASM_COMPILER_TARGET ${target})
+set(CMAKE_ASM_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 
 # The driver defaults to the same `rv32imac` baseline and `ilp32` ABI, but
 # leaves out the CSR and fence instructions that the FreeRTOS port for RISC-V

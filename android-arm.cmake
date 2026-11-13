@@ -23,17 +23,16 @@ include("${ANDROID_NDK}/build/cmake/android.toolchain.cmake")
 
 include("${CMAKE_CURRENT_LIST_DIR}/linux/find-clang.cmake")
 
-set(target armv7a-linux-androideabi${CMAKE_SYSTEM_VERSION})
+set(CMAKE_C_COMPILER_TARGET armv7a-linux-androideabi${CMAKE_SYSTEM_VERSION})
 
 set(CMAKE_C_COMPILER "${clang}")
-set(CMAKE_C_COMPILER_TARGET ${target})
 
 set(CMAKE_CXX_COMPILER "${clang++}")
-set(CMAKE_CXX_COMPILER_TARGET ${target})
+set(CMAKE_CXX_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 set(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS "${clang-scan-deps}")
 
 set(CMAKE_ASM_COMPILER "${clang}")
-set(CMAKE_ASM_COMPILER_TARGET ${target})
+set(CMAKE_ASM_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 
 set(VCPKG_TARGET_TRIPLET arm-android)
 

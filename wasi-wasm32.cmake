@@ -3,11 +3,11 @@ set(CMAKE_SYSTEM_PROCESSOR wasm32)
 
 include("${CMAKE_CURRENT_LIST_DIR}/wasi/find-wasi.cmake")
 
-set(target wasm32-wasip1)
+set(CMAKE_C_COMPILER_TARGET wasm32-wasip1)
 
-find_llvm_builtins("${clang}" "${target}" llvm_builtins)
+find_llvm_builtins("${clang}" "${CMAKE_C_COMPILER_TARGET}" llvm_builtins)
 
-find_wasi_sysroot("${target}" wasi_sysroot)
+find_wasi_sysroot("${CMAKE_C_COMPILER_TARGET}" wasi_sysroot)
 
 set(CMAKE_SYSROOT "${wasi_sysroot}")
 
@@ -15,14 +15,13 @@ set(CMAKE_AR "${llvm-ar}")
 set(CMAKE_RANLIB "${llvm-ranlib}")
 
 set(CMAKE_C_COMPILER "${clang}")
-set(CMAKE_C_COMPILER_TARGET ${target})
 
 set(CMAKE_CXX_COMPILER "${clang++}")
-set(CMAKE_CXX_COMPILER_TARGET ${target})
+set(CMAKE_CXX_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 set(CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS "${clang-scan-deps}")
 
 set(CMAKE_ASM_COMPILER "${clang}")
-set(CMAKE_ASM_COMPILER_TARGET ${target})
+set(CMAKE_ASM_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 
 # CMake resets `CMAKE_EXECUTABLE_SUFFIX` after reading the toolchain file, but
 # leaves the per-language suffixes alone.
@@ -49,9 +48,7 @@ foreach(language IN ITEMS C CXX)
   append_flags_once(CMAKE_${language}_FLAGS_INIT "-fwasm-exceptions")
 endforeach()
 
-set(lto_flags "-Wl,-mllvm,-wasm-enable-eh -Wl,-mllvm,-wasm-use-legacy-eh=false -Wl,-mllvm,-wasm-enable-sjlj")
-
-append_flags_once(CMAKE_EXE_LINKER_FLAGS_INIT "${lto_flags}")
+append_flags_once(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,-mllvm,-wasm-enable-eh -Wl,-mllvm,-wasm-use-legacy-eh=false -Wl,-mllvm,-wasm-enable-sjlj")
 
 set(CMAKE_C_STANDARD_LIBRARIES_INIT "-lsetjmp")
 set(CMAKE_CXX_STANDARD_LIBRARIES_INIT "-lsetjmp -lunwind")

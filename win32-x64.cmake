@@ -5,9 +5,9 @@ include("${CMAKE_CURRENT_LIST_DIR}/win32/find-llvm.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/win32/use-sanitizers.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/nasm/find-nasm.cmake")
 
-set(target x86_64-pc-windows-msvc)
+set(CMAKE_C_COMPILER_TARGET x86_64-pc-windows-msvc)
 
-find_llvm_builtins("${clang-cl}" "${target}" llvm_builtins)
+find_llvm_builtins("${clang-cl}" "${CMAKE_C_COMPILER_TARGET}" llvm_builtins)
 
 # CMake links an MSVC target with the linker rather than the compiler, so
 # nothing else adds the compiler runtime builtins.
@@ -26,13 +26,12 @@ set(CMAKE_RANLIB "${llvm-ranlib}")
 set(CMAKE_STRIP "${llvm-strip}")
 
 set(CMAKE_C_COMPILER "${clang-cl}")
-set(CMAKE_C_COMPILER_TARGET ${target})
 
 set(CMAKE_CXX_COMPILER "${clang-cl}")
-set(CMAKE_CXX_COMPILER_TARGET ${target})
+set(CMAKE_CXX_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 
 set(CMAKE_ASM_COMPILER "${clang-cl}")
-set(CMAKE_ASM_COMPILER_TARGET ${target})
+set(CMAKE_ASM_COMPILER_TARGET ${CMAKE_C_COMPILER_TARGET})
 set(CMAKE_ASM_COMPILE_OPTIONS_MSVC_DEBUG_INFORMATION_FORMAT_Embedded -Z7)
 
 set(CMAKE_ASM_MASM_COMPILER "${llvm-ml64}")
@@ -52,7 +51,7 @@ set(CMAKE_RC_COMPILER "${llvm-rc}")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
 
-use_msvc_sanitizer_runtimes(${target} RUNTIME_LIBRARY CMAKE_MSVC_RUNTIME_LIBRARY)
+use_msvc_sanitizer_runtimes(${CMAKE_C_COMPILER_TARGET} RUNTIME_LIBRARY CMAKE_MSVC_RUNTIME_LIBRARY)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
