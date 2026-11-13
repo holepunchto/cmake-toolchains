@@ -18,7 +18,7 @@ toolchains['linux-arm64']
 Pass the path of a toolchain file to CMake when configuring a build:
 
 ```
-cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=node_modules/cmake-toolchains/linux-arm64.cmake
+cmake -S . -B build --toolchain <path>
 ```
 
 Projects that are added with `ExternalProject_Add()` are configured with the same toolchain, unless they name a toolchain or compiler of their own.
@@ -62,6 +62,16 @@ The toolchains resolve their tools from peer dependencies, which must be install
 - [`picolibc-sysroot`](https://github.com/holepunchto/picolibc-sysroot) for the FreeRTOS targets.
 
 The Android toolchains also need an Android NDK, which is found through the `ANDROID_HOME` environment variable. The macOS, iOS, and watchOS toolchains need the Apple SDKs that ship with Xcode.
+
+### Running FreeRTOS tests under QEMU
+
+The FreeRTOS toolchains can run executables under [QEMU](https://www.qemu.org) to test code that doesn't need the kernel. Pass `-DFREERTOS_QEMU=ON` when configuring, and CTest will run each test bare-metal on the `virt` machine for `freertos-riscv32` and on the `mps2-an505` machine for `freertos-armv8m`:
+
+```
+cmake -S . -B build --toolchain freertos-riscv32.cmake -DFREERTOS_QEMU=ON
+```
+
+Executables are linked with the startup code and memory layout of the machine instead of those of a board, and use semihosting for their console, command line and exit status. This requires `qemu-system-arm` or `qemu-system-riscv32` on `PATH`.
 
 ## License
 

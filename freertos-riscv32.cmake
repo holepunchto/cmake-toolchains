@@ -36,6 +36,19 @@ endforeach()
 # builds that link executables of their own still succeed.
 append_flags_once(CMAKE_EXE_LINKER_FLAGS_INIT "-Wl,--default-script=picolibc.ld")
 
+if(FREERTOS_QEMU)
+  include("${CMAKE_CURRENT_LIST_DIR}/freertos/qemu.cmake")
+
+  use_qemu(
+    SYSTEM riscv32
+    OPTIONS -M virt -bios none
+    FLASH 0x80000000
+    FLASH_SIZE 0x400000
+    RAM 0x80400000
+    RAM_SIZE 0x1000000
+  )
+endif()
+
 # Linking an executable takes the linker script and startup code of a board,
 # which only the firmware that embeds the build has.
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
