@@ -2,6 +2,7 @@ const {
   archive,
   compile,
   emulate,
+  excludes,
   output,
   reconfigure,
   sanitize,
@@ -119,6 +120,31 @@ for (const fixture of ['test/fixtures/c/shared-library', 'test/fixtures/cxx/shar
 for (const fixture of ['test/fixtures/c/executable', 'test/fixtures/cxx/executable']) {
   output(fixture, 'exe.wasm', { targets: ['wasi-wasm32'] })
 }
+
+// Code is only removed by `--gc-sections` if it sits in a section of its own.
+excludes('test/fixtures/c/unused-code', 'exe', 'unused code marker', {
+  targets: [
+    'android-arm',
+    'android-arm64',
+    'android-ia32',
+    'android-x64',
+    'linux-arm',
+    'linux-arm-musl',
+    'linux-arm64',
+    'linux-arm64-musl',
+    'linux-ia32',
+    'linux-ia32-musl',
+    'linux-mips',
+    'linux-mips-musl',
+    'linux-mips-muslsf',
+    'linux-mipsel',
+    'linux-mipsel-musl',
+    'linux-mipsel-muslsf',
+    'linux-riscv64',
+    'linux-x64',
+    'linux-x64-musl'
+  ]
+})
 
 // Static executables link the static libraries of the sysroot, whose debug
 // sections may be compressed, as those of the NDK are with zstd. Apple
