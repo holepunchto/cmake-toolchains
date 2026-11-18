@@ -2,6 +2,7 @@ set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR riscv64)
 
 include("${CMAKE_CURRENT_LIST_DIR}/linux/find-clang.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/linux/split-sections.cmake")
 
 set(CMAKE_C_COMPILER_TARGET riscv64-linux-gnu)
 

@@ -218,6 +218,20 @@ exports.output = function output(fixture, filename, opts = {}) {
   )
 }
 
+exports.excludes = function excludes(fixture, filename, text, opts = {}) {
+  const { targets = null } = opts
+
+  each(
+    targets,
+    (target) => `${fixture}, ${target}, excludes ${JSON.stringify(text)}`,
+    async (t, target, toolchain) => {
+      const build = await generate(t, fixture, target, toolchain)
+
+      t.absent(fs.readFileSync(path.join(build, filename)).includes(text), `excludes ${text}`)
+    }
+  )
+}
+
 exports.sanitize = function sanitize(fixture, sanitizer, opts = {}) {
   const { targets = null, report, symbolized = false } = opts
 
